@@ -1,0 +1,399 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Sistema de Gerenciamento de Clientes - UNICAMPO",
+        "description": "API para o sistema de gerenciamento de clientes da UNICAMPO",
+        "contact": {
+            "email": "vagas.ti@unicampo.coop.br"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/api/v1",
+            "description": "API Server"
+        }
+    ],
+    "paths": {
+        "/clientes": {
+            "get": {
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Obter lista de clientes",
+                "description": "Retorna a lista de clientes com filtros e ordenação",
+                "operationId": "getClientesList",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Filtrar por status (ativo/inativo)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "ativo",
+                                "inativo"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "nome",
+                        "in": "query",
+                        "description": "Buscar por nome",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "order_desc",
+                        "in": "query",
+                        "description": "Ordenar por data de criação decrescente",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de clientes",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Cliente"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/clientes": {
+            "post": {
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Cadastrar novo cliente",
+                "description": "Cria um novo cliente com endereço",
+                "operationId": "storeCliente",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ClienteRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Cliente cadastrado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ClienteResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                }
+            }
+        },
+        "/api/v1/clientes/{id}": {
+            "get": {
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Obter dados de um cliente",
+                "description": "Retorna os dados de um cliente específico",
+                "operationId": "getClienteById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do cliente",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dados do cliente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Cliente"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cliente não encontrado"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Cliente": {
+                "required": [
+                    "nome",
+                    "data_nascimento",
+                    "tipo_pessoa",
+                    "documento",
+                    "email",
+                    "telefone",
+                    "id_endereco",
+                    "id_profissao",
+                    "status"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "nome": {
+                        "type": "string",
+                        "example": "João Silva"
+                    },
+                    "data_nascimento": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "1990-01-01"
+                    },
+                    "tipo_pessoa": {
+                        "type": "string",
+                        "enum": [
+                            "fisica",
+                            "juridica"
+                        ],
+                        "example": "fisica"
+                    },
+                    "documento": {
+                        "type": "string",
+                        "example": "123.456.789-00"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "joao@example.com"
+                    },
+                    "telefone": {
+                        "type": "string",
+                        "example": "(44) 99999-9999"
+                    },
+                    "id_endereco": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "id_profissao": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "ativo",
+                            "inativo"
+                        ],
+                        "example": "ativo"
+                    },
+                    "endereco": {
+                        "$ref": "#/components/schemas/Endereco"
+                    },
+                    "profissao": {
+                        "$ref": "#/components/schemas/Profissao"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "ClienteRequest": {
+                "required": [
+                    "nome",
+                    "data_nascimento",
+                    "tipo_pessoa",
+                    "documento",
+                    "email",
+                    "telefone",
+                    "endereco",
+                    "numero",
+                    "bairro",
+                    "cidade",
+                    "uf",
+                    "id_profissao"
+                ],
+                "properties": {
+                    "nome": {
+                        "type": "string",
+                        "example": "João Silva"
+                    },
+                    "data_nascimento": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "1990-01-01"
+                    },
+                    "tipo_pessoa": {
+                        "type": "string",
+                        "enum": [
+                            "fisica",
+                            "juridica"
+                        ],
+                        "example": "fisica"
+                    },
+                    "documento": {
+                        "type": "string",
+                        "example": "123.456.789-00"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "joao@example.com"
+                    },
+                    "telefone": {
+                        "type": "string",
+                        "example": "(44) 99999-9999"
+                    },
+                    "endereco": {
+                        "type": "string",
+                        "example": "Rua das Flores"
+                    },
+                    "numero": {
+                        "type": "string",
+                        "example": "123"
+                    },
+                    "bairro": {
+                        "type": "string",
+                        "example": "Centro"
+                    },
+                    "complemento": {
+                        "type": "string",
+                        "example": "Apto 101"
+                    },
+                    "cidade": {
+                        "type": "string",
+                        "example": "Maringá"
+                    },
+                    "uf": {
+                        "type": "string",
+                        "example": "PR"
+                    },
+                    "id_profissao": {
+                        "type": "integer",
+                        "example": 1
+                    }
+                },
+                "type": "object"
+            },
+            "ClienteResponse": {
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Cliente cadastrado com sucesso"
+                    },
+                    "cliente": {
+                        "$ref": "#/components/schemas/Cliente"
+                    }
+                },
+                "type": "object"
+            },
+            "Endereco": {
+                "required": [
+                    "endereco",
+                    "numero",
+                    "bairro",
+                    "cidade",
+                    "uf"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "endereco": {
+                        "type": "string",
+                        "example": "Rua das Flores"
+                    },
+                    "numero": {
+                        "type": "string",
+                        "example": "123"
+                    },
+                    "bairro": {
+                        "type": "string",
+                        "example": "Centro"
+                    },
+                    "complemento": {
+                        "type": "string",
+                        "example": "Apto 101"
+                    },
+                    "cidade": {
+                        "type": "string",
+                        "example": "Maringá"
+                    },
+                    "uf": {
+                        "type": "string",
+                        "example": "PR"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Profissao": {
+                "required": [
+                    "nome_profissao"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "nome_profissao": {
+                        "type": "string",
+                        "example": "Engenheiro de Software"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Clientes",
+            "description": "Clientes"
+        }
+    ]
+}

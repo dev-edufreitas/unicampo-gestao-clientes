@@ -1,0 +1,34 @@
+# --- FRONTEND (Vue/Node) ---
+/frontend/node_modules/
+/frontend/dist/
+/frontend/.env
+
+# --- BACKEND (Laravel) ---
+/backend/vendor/
+/backend/storage/*.key
+/backend/storage/pail/
+/backend/public/storage/
+/backend/public/build/
+/backend/public/hot/
+/backend/.env
+/backend/.env.backup
+/backend/.env.production
+/backend/.phpactor.json
+/backend/.phpunit.result.cache
+/backend/.phpunit.cache
+/backend/Homestead.json
+/backend/Homestead.yaml
+/backend/npm-debug.log
+/backend/yarn-error.log
+/backend/auth.json
+
+# --- TOOLS / IDEs ---
+/.vscode/
+/.idea/
+/.fleet/
+/.nova/
+/.zed
+
+# --- Geral ---
+.DS_Store
+Thumbs.db
