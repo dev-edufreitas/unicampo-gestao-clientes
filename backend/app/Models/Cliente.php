@@ -69,6 +69,12 @@ class Cliente extends Model
     protected $casts = [
         'data_nascimento' => 'date',
     ];
+    
+    protected function serializeDate(\DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d');
+    }
+
 
     public function endereco()
     {

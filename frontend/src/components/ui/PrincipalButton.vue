@@ -1,8 +1,28 @@
 <template>
-  <button :type="type" :disabled="disabled" :class="[
-    'btn btn-principal d-flex align-items-center justify-content-center gap-2',
-    block ? 'w-100' : ''
-  ]" @click="$emit('click')">
+  <!-- Se tem prop 'to', renderiza como router-link -->
+  <router-link 
+    v-if="to" 
+    :to="to" 
+    :class="[
+      'btn btn-principal d-flex align-items-center justify-content-center gap-2',
+      block ? 'w-100' : ''
+    ]"
+  >
+    <i v-if="icon" :class="icon"></i>
+    <slot />
+  </router-link>
+  
+  <!-- Senão, renderiza como botão normal -->
+  <button 
+    v-else
+    :type="type" 
+    :disabled="disabled" 
+    :class="[
+      'btn btn-principal d-flex align-items-center justify-content-center gap-2',
+      block ? 'w-100' : ''
+    ]" 
+    @click="$emit('click')"
+  >
     <i v-if="icon" :class="icon"></i>
     <slot />
   </button>
@@ -18,8 +38,10 @@ export default {
     },
     icon: String,
     block: Boolean,
-    disabled: Boolean
-  }
+    disabled: Boolean,
+    to: String // Nova prop para navegação
+  },
+  emits: ['click']
 };
 </script>
 
@@ -32,10 +54,12 @@ export default {
   font-weight: 500;
   padding: 0.375rem 0.75rem;
   transition: all 0.2s ease-in-out;
+  text-decoration: none; /* Para quando usado como router-link */
 }
 
 .btn-principal:hover {
   background-color: #083d26;
   color: white;
+  text-decoration: none; /* Para quando usado como router-link */
 }
 </style>

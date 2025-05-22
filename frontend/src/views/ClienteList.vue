@@ -9,9 +9,9 @@
       <PrincipalButton to="/clientes/novo" icon="fas fa-user-plus">
         Novo Cliente
       </PrincipalButton>
-
     </div>
 
+    <!-- Filtros -->
     <div class="card border-0 rounded-4 shadow-sm mb-4">
       <div class="card-body">
         <h5 class="mb-4 text-unicampo fw-semibold">
@@ -80,74 +80,69 @@
       </div>
     </div>
 
-    <!-- Tabela -->
-    <div v-else class="card shadow-sm">
-      <div class="card-header bg-light d-flex justify-content-between align-items-center">
-        <h6 class="card-title mb-0 text-unicampo">
+    <div v-else class="card border-0 shadow-sm">
+      <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
+        <h6 class="mb-0 text-unicampo fw-semibold">
           <i class="fas fa-list me-2"></i> {{ clientes.length }} cliente(s) encontrado(s)
         </h6>
-        <button class="btn btn-outline-secondary btn-sm">
-          <i class="fas fa-download me-1"></i> Exportar
-        </button>
       </div>
-      <div class="card-body p-0">
-        <div class="table-responsive">
-          <table class="table table-hover mb-0">
-            <thead class="table-light">
-              <tr>
-                <th>#</th>
-                <th>Cliente</th>
-                <th>Documento</th>
-                <th>Contato</th>
-                <th>Profissão</th>
-                <th>Status</th>
-                <th class="text-center">Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="cliente in clientes" :key="cliente.id">
-                <td class="text-muted">#{{ cliente.id.toString().padStart(4, '0') }}</td>
-                <td>
-                  <div class="d-flex align-items-center">
-                    <div
-                      class="avatar-circle bg-light text-unicampo fw-bold me-3 d-flex align-items-center justify-content-center">
-                      {{ cliente.nome.charAt(0).toUpperCase() }}
-                    </div>
-                    <div>
-                      <div class="fw-medium">{{ cliente.nome }}</div>
-                      <small class="text-muted">{{ cliente.email }}</small>
-                    </div>
-                  </div>
-                </td>
-                <td><code>{{ formatarDocumento(cliente.documento) }}</code></td>
-                <td>{{ cliente.telefone }}</td>
-                <td><span class="badge bg-light text-dark">{{ cliente.profissao.nome_profissao }}</span></td>
-                <td>
-                  <span :class="['badge', cliente.status === 'ativo' ? 'bg-success' : 'bg-danger']">
-                    <i :class="cliente.status === 'ativo' ? 'fas fa-check' : 'fas fa-times'" class="me-1"></i>
-                    {{ cliente.status === 'ativo' ? 'Ativo' : 'Inativo' }}
-                  </span>
-                </td>
-                <td class="text-center">
-                  <div class="btn-group btn-group-sm" role="group">
-                    <router-link :to="`/clientes/${cliente.id}`" class="btn btn-outline-info" title="Visualizar">
-                      <i class="fas fa-eye"></i>
-                    </router-link>
-                    <router-link :to="`/clientes/${cliente.id}/editar`" class="btn btn-outline-primary" title="Editar">
-                      <i class="fas fa-edit"></i>
-                    </router-link>
-                    <button v-if="cliente.status === 'ativo'" type="button" class="btn btn-outline-danger"
-                      title="Inativar" @click="inativarCliente(cliente.id)">
-                      <i class="fas fa-trash"></i>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+
+      <div class="table-responsive">
+        <table class="table table-borderless align-middle mb-0">
+          <thead class="bg-light text-secondary">
+            <tr>
+              <th>#</th>
+              <th>Cliente</th>
+              <th>Documento</th>
+              <th>Contato</th>
+              <th>Profissão</th>
+              <th>Status</th>
+              <th class="text-center">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="cliente in clientes" :key="cliente.id" class="border-top">
+              <td class="text-muted small">#{{ cliente.id.toString().padStart(4, '0') }}</td>
+              <td>
+                <div class="fw-semibold">{{ cliente.nome }}</div>
+                <div class="text-muted small">{{ cliente.email }}</div>
+              </td>
+              <td><span class="text-monospace small">{{ formatarDocumento(cliente.documento) }}</span></td>
+              <td><span class="small">{{ cliente.telefone }}</span></td>
+              <td><span class="badge bg-light text-dark small">{{ cliente.profissao.nome_profissao }}</span></td>
+              <td>
+                <span class="badge small"
+                  :class="cliente.status === 'ativo' ? 'bg-success-subtle text-success' : 'bg-secondary-subtle text-secondary'">
+                  {{ cliente.status === 'ativo' ? 'Ativo' : 'Inativo' }}
+                </span>
+              </td>
+              <td class="text-center">
+                <div class="dropdown">
+                  <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+          
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                      <router-link :to="`/clientes/${cliente.id}/editar`" class="dropdown-item">
+                        <i class="fas fa-pen me-2"></i> Editar
+                      </router-link>
+                    </li>
+                    <li v-if="cliente.status === 'ativo'">
+                      <button class="dropdown-item text-danger" @click="inativarCliente(cliente.id)">
+                        <i class="fas fa-ban me-2"></i> Inativar
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </td>
+
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -174,6 +169,7 @@ export default {
     const error = computed(() => store.getters['cliente/getError']);
 
     const buscarClientes = async () => {
+      console.log(filtros.value);
       await store.dispatch('cliente/fetchClientes', filtros.value);
     };
 
@@ -215,13 +211,6 @@ export default {
 </script>
 
 <style scoped>
-.avatar-circle {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  font-size: 0.875rem;
-}
-
 .text-unicampo {
   color: #0a3b25;
 }
@@ -234,5 +223,29 @@ export default {
 
 .btn-unicampo:hover {
   background-color: #083d26;
+}
+
+.table th {
+  font-weight: 600;
+  color: #495057;
+}
+
+.table td,
+.table th {
+  vertical-align: middle;
+  padding: 0.75rem;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.badge {
+  font-size: 0.75rem;
+  padding: 0.4em 0.6em;
+}
+
+.btn-group .btn {
+  padding: 0.375rem 0.6rem;
 }
 </style>

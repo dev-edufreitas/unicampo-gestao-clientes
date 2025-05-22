@@ -1,0 +1,57 @@
+import { watch } from 'vue';
+import { validaCPF, validaCNPJ, validaEmail } from '@/utils/validators';
+
+export function useValidacaoCliente(form, errors, documentoLabel) {
+  watch(() => form.value.nome, (val) => {
+    errors.value.nome = '';
+    if (!val.trim()) errors.value.nome = 'O nome é obrigatório';
+    else if (val.length > 255) errors.value.nome = 'O nome deve ter no máximo 255 caracteres';
+  });
+
+  watch(() => form.value.data_nascimento, (val) => {
+    errors.value.data_nascimento = '';
+    if (!val) {
+      errors.value.data_nascimento = 'A data de nascimento é obrigatória';
+    } else {
+      const hoje = new Date();
+      const nascimento = new Date(val);
+      if (nascimento >= hoje) {
+        errors.value.data_nascimento = 'A data de nascimento deve ser anterior à data atual';
+      }
+    }
+  });
+
+  watch(() => form.value.tipo_pessoa, (val) => {
+    errors.value.tipo_pessoa = '';
+    if (!val) {
+      errors.value.tipo_pessoa = 'O tipo de pessoa é obrigatório';
+    }
+  });
+
+  watch(() => form.value.documento, (val) => {
+    errors.value.documento = '';
+    const doc = val.replace(/[^\d]/g, '');
+    if (!doc) {
+      errors.value.documento = `O ${documentoLabel.value} é obrigatório`;
+    } else if (form.value.tipo_pessoa === 'fisica' && !validaCPF(doc)) {
+      errors.value.documento = 'CPF inválido';
+    } else if (form.value.tipo_pessoa === 'juridica' && !validaCNPJ(doc)) {
+      errors.value.documento = 'CNPJ inválido';
+    }
+  });
+
+  watch(() => form.value.email, (val) => {
+    errors.value.email = '';
+    if (!val) errors.value.email = 'O email é obrigatório';
+    else if (!validaEmail(val)) errors.value.email = 'Email inválido';
+  });
+
+  watch(() => form.value.telefone, (val) => {
+    errors.value.telefone = '';
+    const tel = val.replace(/[^\d]/g, '');
+    if (!tel) errors.value.telefone = 'O telefone é obrigatório';
+    else if (tel.length < 10 || tel.length > 11) {
+      errors.value.telefone = 'O telefone deve conter DDD + 8 ou 9 dígitos';
+    }
+  });
+}

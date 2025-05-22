@@ -1,10 +1,8 @@
 <template>
   <div class="home pt-lg-5 pt-4">
-    <!-- Card Principal Hero -->
     <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-5">
       <div class="card-body p-0">
         <div class="row g-0 align-items-center">
-          <!-- Texto -->
           <div class="col-lg-6 p-5">
             <h1 class="display-4 text-unicampo mb-3">Sistema de Gerenciamento</h1>
             <h2 class="h4 fw-light text-secondary mb-4">Gerencie seus clientes de forma inteligente</h2>
@@ -12,33 +10,29 @@
               Bem-vindo ao Sistema de Gerenciamento de Clientes da UNICAMPO.
               Organize, monitore e atenda seus clientes com eficiência.
             </p>
-            <div class=" d-flex flex-wrap gap-3 mb-4">
-              <router-link to="/clientes" class="btn btn-unicampo mr-3 px-4 py-3">
-                <i class="fas fa-users me-2"></i> Ver Clientes
-              </router-link>
-              <router-link to="/clientes/novo" class="btn btn-unicampo-outline px-4 py-3">
+            <div class="d-flex flex-wrap gap-3 mb-4">
+              <PrincipalButton to="/clientes" icon="fas fa-user">
+                Ver Clientes
+              </PrincipalButton>
+              <button class="btn btn-unicampo-outline px-4 py-3" @click="irParaNovoCliente">
                 <i class="fas fa-user-plus me-2"></i> Novo Cliente
-              </router-link>
+              </button>
             </div>
           </div>
-          <!-- Imagem -->
-          <div class="col-lg-6 ">
+          <div class="col-lg-6">
             <img src="@/assets/gerenciamento.png" alt="Gerenciamento de Clientes" class="img-fluid" />
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Seção de Funcionalidades -->
     <section class="funcionalidades-section">
       <div class="container-fluid px-0">
-        <!-- Título da seção -->
         <div class="text-center mb-5">
           <h2 class="section-title">Funcionalidades do Sistema</h2>
           <p class="text-muted mt-3">Explore todas as ferramentas disponíveis</p>
         </div>
-        
-        <!-- Cards de funcionalidades -->
+
         <div class="row g-4 px-3">
           <div class="col-lg-4 col-md-6" v-for="(card, index) in cards" :key="index">
             <div class="card h-100 border-0 funcionalidade-card shadow-sm">
@@ -60,7 +54,6 @@
       </div>
     </section>
 
-    <!-- Seção de Estatísticas -->
     <section class="estatisticas-section mt-5">
       <div class="card border-0 rounded-4 bg-light">
         <div class="card-body p-5">
@@ -87,75 +80,57 @@
         </div>
       </div>
     </section>
-
-    <!-- Seção de Ações Rápidas -->
-    <section class="acoes-rapidas-section mt-5">
-      <div class="row g-4">
-        <div class="col-md-6">
-          <div class="card border-0 rounded-4 shadow-sm h-100">
-            <div class="card-body p-4 text-center">
-              <i class="fas fa-clock fa-3x text-unicampo mb-3"></i>
-              <h4 class="text-unicampo mb-3">Ações Recentes</h4>
-              <p class="text-muted mb-4">Veja as últimas atividades do sistema</p>
-              <router-link to="/historico" class="btn btn-unicampo-outline">
-                Ver Histórico
-              </router-link>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="card border-0 rounded-4 shadow-sm h-100">
-            <div class="card-body p-4 text-center">
-              <i class="fas fa-cog fa-3x text-unicampo mb-3"></i>
-              <h4 class="text-unicampo mb-3">Configurações</h4>
-              <p class="text-muted mb-4">Personalize o sistema conforme suas necessidades</p>
-              <router-link to="/configuracoes" class="btn btn-unicampo-outline">
-                Configurar
-              </router-link>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'Home',
-  data() {
-    return {
-      cards: [
-        {
-          icon: 'fa-user-plus',
-          title: 'Cadastrar Clientes',
-          description: 'Adicione novos clientes ao sistema com facilidade e mantenha seus dados sempre atualizados para um controle eficiente.',
-          link: '/clientes/novo',
-          cta: 'Cadastrar Agora',
-        },
-        {
-          icon: 'fa-search',
-          title: 'Consultar Clientes',
-          description: 'Visualize e pesquise os clientes cadastrados no sistema de forma rápida e eficiente com filtros avançados.',
-          link: '/clientes',
-          cta: 'Consultar Lista',
-        },
-        {
-          icon: 'fa-file-alt',
-          title: 'Documentação',
-          description: 'Acesse documentação completa e guias detalhados para utilizar todas as funcionalidades do sistema.',         link: '/relatorios',
-          cta: 'Ver Documentação',
-        },
-      ],
-      stats: {
-        totalClientes: '1,247',
-        clientesAtivos: '1,089',
-        novosMes: '43'
-      }
-    };
-  },
+<script setup>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+import PrincipalButton from '@/components/ui/PrincipalButton.vue';
+
+const router = useRouter();
+const store  = useStore();
+
+const irParaNovoCliente = () => {
+  store.dispatch('cliente/resetForm');
+  router.push({ path: '/clientes/novo', query: { clean: '1' } });
 };
+
+const cards = ref([
+  {
+    icon: 'fa-user-plus',
+    title: 'Cadastrar Clientes',
+    description:
+      'Adicione novos clientes ao sistema com facilidade e mantenha seus dados sempre atualizados para um controle eficiente.',
+    link: '/clientes/novo',
+    cta: 'Cadastrar Agora',
+  },
+  {
+    icon: 'fa-search',
+    title: 'Consultar Clientes',
+    description:
+      'Visualize e pesquise os clientes cadastrados no sistema de forma rápida e eficiente com filtros avançados.',
+    link: '/clientes',
+    cta: 'Consultar Lista',
+  },
+  {
+    icon: 'fa-file-alt',
+    title: 'Documentação',
+    description:
+      'Acesse documentação completa e guias detalhados para utilizar todas as funcionalidades do sistema.',
+    link: '/api/documentation',
+    cta: 'Ver Documentação',
+  },
+]);
+
+const stats = ref({
+  totalClientes: '1,247',
+  clientesAtivos: '1,089',
+  novosMes: '43',
+});
 </script>
+
 
 <style scoped>
 .text-unicampo {
@@ -243,7 +218,7 @@ export default {
   margin-bottom: 3rem;
 }
 
-.estatisticas-section, 
+.estatisticas-section,
 .acoes-rapidas-section {
   margin-bottom: 2rem;
 }
@@ -263,7 +238,7 @@ export default {
   .home {
     padding-top: 180px;
   }
-  
+
   .funcionalidades-section .row {
     justify-content: center;
   }
@@ -273,7 +248,7 @@ export default {
   .display-4 {
     font-size: 2rem;
   }
-  
+
   .display-6 {
     font-size: 1.5rem;
   }

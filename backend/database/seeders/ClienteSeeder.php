@@ -15,11 +15,11 @@ class ClienteSeeder extends Seeder
         $faker      = Faker::create('pt_BR');
         $enderecos  = Endereco::all();
         $profissoes = Profissao::all();
-        
+
         for ($i = 0; $i < 10; $i++) {
             $tipoPessoa = $faker->randomElement(['fisica', 'juridica']);
             $documento  = $tipoPessoa === 'fisica' ? $faker->cpf : $faker->cnpj;
-            
+
             Cliente::create([
                 'nome'            => $faker->name,
                 'data_nascimento' => $faker->date('Y-m-d', '-18 years'),
@@ -30,6 +30,8 @@ class ClienteSeeder extends Seeder
                 'id_endereco'     => $enderecos->random()->id,
                 'id_profissao'    => $profissoes->random()->id,
                 'status'          => $faker->randomElement(['ativo', 'inativo']),
+                'created_at'      => now()->subDays($i),
+                'updated_at'      => now()->subDays($i),
             ]);
         }
     }
