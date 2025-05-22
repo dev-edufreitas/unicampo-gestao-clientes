@@ -57,22 +57,37 @@
     <section class="estatisticas-section mt-5">
       <div class="card border-0 rounded-4 bg-light">
         <div class="card-body p-5">
-          <div class="row text-center">
+          <!-- Loading State -->
+          <div v-if="statsLoading" class="text-center py-4">
+            <div class="spinner-border text-unicampo" role="status">
+              <span class="visually-hidden">Carregando estatísticas...</span>
+            </div>
+            <p class="text-muted mt-2">Carregando estatísticas...</p>
+          </div>
+
+          <!-- Error State -->
+          <div v-else-if="statsError" class="alert alert-warning text-center">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            Erro ao carregar estatísticas. Mostrando dados de exemplo.
+          </div>
+
+          <!-- Stats Display -->
+          <div v-else class="row text-center">
             <div class="col-md-4 mb-4 mb-md-0">
               <div class="stat-item">
-                <h3 class="display-6 fw-bold text-unicampo mb-2">{{ stats.totalClientes }}</h3>
+                <h3 class="display-6 fw-bold text-unicampo mb-2">{{ formatNumber(stats.total_clientes) }}</h3>
                 <p class="text-muted mb-0">Clientes Cadastrados</p>
               </div>
             </div>
             <div class="col-md-4 mb-4 mb-md-0">
               <div class="stat-item">
-                <h3 class="display-6 fw-bold text-unicampo mb-2">{{ stats.clientesAtivos }}</h3>
+                <h3 class="display-6 fw-bold text-unicampo mb-2">{{ formatNumber(stats.clientes_ativos) }}</h3>
                 <p class="text-muted mb-0">Clientes Ativos</p>
               </div>
             </div>
             <div class="col-md-4">
               <div class="stat-item">
-                <h3 class="display-6 fw-bold text-unicampo mb-2">{{ stats.novosMes }}</h3>
+                <h3 class="display-6 fw-bold text-unicampo mb-2">{{ formatNumber(stats.novos_mes) }}</h3>
                 <p class="text-muted mb-0">Novos este Mês</p>
               </div>
             </div>
@@ -83,54 +98,84 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue';
+<script>
+import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import PrincipalButton from '@/components/ui/PrincipalButton.vue';
 
-const router = useRouter();
-const store  = useStore();
+export default {
+  name: 'Home',
+  components: {
+    PrincipalButton
+  },
+  setup() {
+    const router = useRouter();
+    const store = useStore();
 
-const irParaNovoCliente = () => {
-  store.dispatch('cliente/resetForm');
-  router.push({ path: '/clientes/novo', query: { clean: '1' } });
+    // Estados computados do Vuex
+    const stats = computed(() => store.getters['cliente/getStats']);
+    const statsLoading = computed(() => store.getters['cliente/isLoading']);
+    const statsError = computed(() => store.getters['cliente/hasError']);
+
+    const irParaNovoCliente = () => {
+      store.dispatch('cliente/resetForm');
+      router.push({ path: '/clientes/novo', query: { clean: '1' } });
+    };
+
+    const cards = ref([
+      {
+        icon: 'fa-user-plus',
+        title: 'Cadastrar Clientes',
+        description:
+          'Adicione novos clientes ao sistema com facilidade e mantenha seus dados sempre atualizados para um controle eficiente.',
+        link: '/clientes/novo',
+        cta: 'Cadastrar Agora',
+      },
+      {
+        icon: 'fa-search',
+        title: 'Consultar Clientes',
+        description:
+          'Visualize e pesquise os clientes cadastrados no sistema de forma rápida e eficiente com filtros avançados.',
+        link: '/clientes',
+        cta: 'Consultar Lista',
+      },
+      {
+        icon: 'fa-file-alt',
+        title: 'Documentação',
+        description:
+          'Acesse documentação completa e guias detalhados para utilizar todas as funcionalidades do sistema.',
+        link: '/api/documentation',
+        cta: 'Ver Documentação',
+      },
+    ]);
+
+    // Função para formatar números
+    const formatNumber = (number) => {
+      if (number === 0) return '0';
+      return number.toLocaleString('pt-BR');
+    };
+
+    // Buscar estatísticas ao montar o componente
+    onMounted(async () => {
+      try {
+        await store.dispatch('cliente/fetchStats');
+      } catch (error) {
+        console.error('Erro ao carregar estatísticas:', error);
+      }
+    });
+
+    return {
+      cards,
+      stats,
+      statsLoading,
+      statsError,
+      irParaNovoCliente,
+      formatNumber
+    };
+  }
 };
-
-const cards = ref([
-  {
-    icon: 'fa-user-plus',
-    title: 'Cadastrar Clientes',
-    description:
-      'Adicione novos clientes ao sistema com facilidade e mantenha seus dados sempre atualizados para um controle eficiente.',
-    link: '/clientes/novo',
-    cta: 'Cadastrar Agora',
-  },
-  {
-    icon: 'fa-search',
-    title: 'Consultar Clientes',
-    description:
-      'Visualize e pesquise os clientes cadastrados no sistema de forma rápida e eficiente com filtros avançados.',
-    link: '/clientes',
-    cta: 'Consultar Lista',
-  },
-  {
-    icon: 'fa-file-alt',
-    title: 'Documentação',
-    description:
-      'Acesse documentação completa e guias detalhados para utilizar todas as funcionalidades do sistema.',
-    link: '/api/documentation',
-    cta: 'Ver Documentação',
-  },
-]);
-
-const stats = ref({
-  totalClientes: '1,247',
-  clientesAtivos: '1,089',
-  novosMes: '43',
-});
 </script>
-
 
 <style scoped>
 .text-unicampo {

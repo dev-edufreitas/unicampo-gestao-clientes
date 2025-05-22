@@ -1,5 +1,7 @@
 <?php
 
+
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\ProfissaoController;
 use App\Http\Controllers\API\EnderecoController;
@@ -16,6 +18,7 @@ Route::prefix('v1')->group(function () {
     
     // Rotas para Clientes
     Route::get('/clientes', [ClienteController::class, 'index']);
+    Route::get('/clientes/stats', [ClienteController::class, 'getStats']); 
     Route::post('/clientes', [ClienteController::class, 'store']);
     Route::get('/clientes/{id}', [ClienteController::class, 'show']);
     Route::put('/clientes/{id}', [ClienteController::class, 'update']);

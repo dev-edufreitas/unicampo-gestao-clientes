@@ -8,6 +8,11 @@ export default {
     cliente: null,
     loading: false,
     error: null,
+    stats: {
+      total_clientes: 0,
+      clientes_ativos: 0,
+      novos_mes: 0
+    },
     // Estado para o formulário wizard
     formData: {
       // Etapa 1: Dados Pessoais
@@ -39,6 +44,7 @@ export default {
     getError: state => state.error,
     getClientes: state => state.clientes,
     getCliente: state => state.cliente,
+    getStats: state => state.stats,
     getCurrentStep: state => state.currentStep,
     getTotalSteps: state => state.totalSteps,
     getFormData: state => state.formData
@@ -59,6 +65,10 @@ export default {
 
     SET_CLIENTE(state, cliente) {
       state.cliente = cliente;
+    },
+
+    SET_STATS(state, stats) {
+      state.stats = stats;
     },
 
     SET_FORM_DATA(state, formData) {
@@ -94,6 +104,23 @@ export default {
   actions: {
     setCurrentStep({ commit }, step) {
       commit('SET_CURRENT_STEP', step);
+    },
+
+    async fetchStats({ commit }) { 
+      try {
+        commit('SET_LOADING', true);
+        commit('SET_ERROR', null);
+
+        const response = await clienteService.getStats();
+        commit('SET_STATS', response.data);
+
+        return response.data;
+      } catch (error) {
+        commit('SET_ERROR', error.response?.data?.message || 'Erro ao buscar estatísticas');
+        throw error;
+      } finally {
+        commit('SET_LOADING', false);
+      }
     },
 
     async fetchClientes({ commit }, params = {}) {

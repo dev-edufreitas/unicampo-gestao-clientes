@@ -105,7 +105,6 @@ export default {
       }
     };
 
-    // Observa o valor do Vuex e sincroniza localmente
     watch(
       () => currentStep.value,
       (step) => {

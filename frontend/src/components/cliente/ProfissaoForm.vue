@@ -101,11 +101,10 @@
           <i class="fas fa-arrow-left me-2"></i>
           Voltar
         </button>
-        <button type="button" class="btn btn-unicampo btn-save" @click="salvar" :disabled="!isFormValid || loading">
-          <span v-if="loading" class="spinner-border spinner-border-sm me-2" role="status"></span>
-          <i v-else class="fas fa-save me-2"></i>
+        <PrincipalButton type="button" icon="fas fa-save" :disabled="!isFormValid || loading" @click="handleSalvar">
           {{ isEdicao ? 'Atualizar Cliente' : 'Cadastrar Cliente' }}
-        </button>
+        </PrincipalButton>
+
       </div>
     </div>
   </div>
@@ -115,18 +114,21 @@
 import { ref, computed, onMounted, watch } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter, useRoute } from 'vue-router';
+import PrincipalButton from '../ui/PrincipalButton.vue';
 import SelectField from '@/components/ui/SelectField.vue';
+
 
 export default {
   name: 'ProfissaoForm',
   components: {
-    SelectField
+    SelectField,
+    PrincipalButton
   },
-  
+
   setup() {
-    const store = useStore();
+    const store  = useStore();
     const router = useRouter();
-    const route = useRoute();
+    const route  = useRoute();
     const formData = store.getters['cliente/getFormData'];
 
     const form = ref({
@@ -136,6 +138,13 @@ export default {
     const errors = ref({
       id_profissao: ''
     });
+
+    const handleSalvar = () => {
+      Object.keys(localStorage).forEach(key => {
+        if (key.includes('Form')) localStorage.removeItem(key)
+      })
+      salvar()
+    };
 
     const loading = ref(false);
 
@@ -345,10 +354,15 @@ export default {
       isEdicao,
       isFormValid,
       voltar,
+      handleSalvar,
       salvar
+      
     };
   }
 };
+
+
+
 </script>
 
 <style scoped>

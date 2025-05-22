@@ -19,5 +19,8 @@ export default {
 
   deleteCliente(id) {
     return api.delete(`/clientes/${id}`);
+  },
+  getStats() {
+    return api.get('/clientes/stats');
   }
 };
