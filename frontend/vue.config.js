@@ -8,20 +8,26 @@ module.exports = defineConfig({
       paths: ['src/**/*', 'public/**/*'],
       options: {
         usePolling: true,
-        poll: 1000, // Verificar mudanças a cada segundo
+        poll: 1000, 
         ignored: /node_modules/,
       },
     },
-    hot: true, // Garantir que o hot reload está ativado
+    hot: true, 
     client: {
-      webSocketURL: 'auto://0.0.0.0:0/ws', // Ajuda com problemas de WebSocket no Docker
+      webSocketURL: 'auto://0.0.0.0:0/ws', 
     },
   },
   configureWebpack: {
     cache: false,
     watchOptions: {
       ignored: /node_modules/,
-      poll: 1000, // Consistente com a configuração acima
+      poll: 1000, 
     },
   },
+    chainWebpack: config => {
+    config.plugin('define').tap(defs => {
+      defs[0]['__VUE_PROD_HYDRATION_MISMATCH_DETAILS__'] = JSON.stringify(false)
+      return defs
+    })
+  }
 })

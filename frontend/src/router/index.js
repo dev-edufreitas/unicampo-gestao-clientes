@@ -5,25 +5,25 @@ import ClienteForm from '@/views/ClienteForm.vue';
 
 const routes = [
   {
-    path: '/',
-    name: 'home',
+    path     : '/',
+    name     : 'home',
     component: Home
   },
   {
-    path: '/clientes',
-    name: 'clientes',
+    path     : '/clientes',
+    name     : 'clientes',
     component: ClienteList
   },
   {
-    path: '/clientes/novo',
-    name: 'cliente-novo',
+    path     : '/clientes/novo',
+    name     : 'cliente-novo',
     component: ClienteForm
   },
   {
-    path: '/clientes/:id/editar',
-    name: 'cliente-editar',
+    path     : '/clientes/:id/editar',
+    name     : 'cliente-editar',
     component: ClienteForm,
-    props: true
+    props    : true
   }
 ];
 

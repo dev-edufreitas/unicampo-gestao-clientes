@@ -1,11 +1,7 @@
 <template>
   <transition name="fade">
-    <div
-      v-if="visible"
-      :class="['alert', typeClass, 'alert-notification']"
-      class="d-flex align-items-center"
-      :style="style"
-    >
+    <div v-if="visible" :class="['alert', typeClass, 'alert-notification']" class="d-flex align-items-center"
+      :style="style">
       <i :class="iconClass + ' me-2'"></i>
       <span>{{ message }}</span>
     </div>
@@ -16,8 +12,8 @@
 export default {
   name: 'Notification',
   props: {
-    message: String,
-    type: { type: String, default: 'success' },
+    message : String,
+    type    : { type: String, default: 'success' },
     duration: { type: Number, default: 3000 }
   },
   data() {
@@ -56,10 +52,13 @@ export default {
 </script>
 
 <style scoped>
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 0.3s;
 }
-.fade-enter-from, .fade-leave-to {
+
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
 }
 </style>

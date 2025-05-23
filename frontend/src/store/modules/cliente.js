@@ -5,49 +5,44 @@ export default {
 
   state: {
     clientes: [],
-    cliente: null,
-    loading: false,
-    error: null,
-    stats: {
-      total_clientes: 0,
+    cliente : null,
+    loading : false,
+    error   : null,
+    stats   : {
+      total_clientes : 0,
       clientes_ativos: 0,
-      novos_mes: 0
+      novos_mes      : 0
     },
-    // Estado para o formulário wizard
+
     formData: {
-      // Etapa 1: Dados Pessoais
-      nome: '',
+      nome           : '',
       data_nascimento: '',
-      tipo_pessoa: 'fisica',
-      documento: '',
-      email: '',
-      telefone: '',
-
-      // Etapa 2: Endereço
-      endereco: '',
-      numero: '',
-      bairro: '',
-      complemento: '',
-      cidade: '',
-      uf: '',
-
-      // Etapa 3: Profissão
-      id_profissao: null
+      tipo_pessoa    : 'fisica',
+      documento      : '',
+      email          : '',
+      telefone       : '',
+      endereco       : '',
+      numero         : '',
+      bairro         : '',
+      complemento    : '',
+      cidade         : '',
+      uf             : '',
+      id_profissao   : null
     },
     currentStep: 1,
-    totalSteps: 3
+    totalSteps : 3
   },
 
   getters: {
-    isLoading: state => state.loading,
-    hasError: state => state.error !== null,
-    getError: state => state.error,
-    getClientes: state => state.clientes,
-    getCliente: state => state.cliente,
-    getStats: state => state.stats,
+    isLoading     : state => state.loading,
+    hasError      : state => state.error !== null,
+    getError      : state => state.error,
+    getClientes   : state => state.clientes,
+    getCliente    : state => state.cliente,
+    getStats      : state => state.stats,
     getCurrentStep: state => state.currentStep,
-    getTotalSteps: state => state.totalSteps,
-    getFormData: state => state.formData
+    getTotalSteps : state => state.totalSteps,
+    getFormData   : state => state.formData
   },
 
   mutations: {
@@ -71,8 +66,8 @@ export default {
       state.stats = stats;
     },
 
-    SET_FORM_DATA(state, formData) {
-      Object.assign(state.formData, formData);
+    SET_FORM_DATA(state, payload) {
+      Object.assign(state.formData, payload);
     },
 
     SET_CURRENT_STEP(state, step) {
@@ -82,19 +77,19 @@ export default {
 
     RESET_FORM_DATA(state) {
       state.formData = {
-        nome: '',
+        nome           : '',
         data_nascimento: '',
-        tipo_pessoa: 'fisica',
-        documento: '',
-        email: '',
-        telefone: '',
-        endereco: '',
-        numero: '',
-        bairro: '',
-        complemento: '',
-        cidade: '',
-        uf: '',
-        id_profissao: null
+        tipo_pessoa    : 'fisica',
+        documento      : '',
+        email          : '',
+        telefone       : '',
+        endereco       : '',
+        numero         : '',
+        bairro         : '',
+        complemento    : '',
+        cidade         : '',
+        uf             : '',
+        id_profissao   : null
       };
       state.currentStep = 1;
     }
@@ -105,7 +100,7 @@ export default {
       commit('SET_CURRENT_STEP', step);
     },
 
-    async fetchStats({ commit }) { 
+    async fetchStats({ commit }) {
       try {
         commit('SET_LOADING', true);
         commit('SET_ERROR', null);
@@ -147,22 +142,21 @@ export default {
         const response = await clienteService.getCliente(id);
         commit('SET_CLIENTE', response.data);
 
-        // Preencher formData com os dados do cliente para edição
         const cliente = response.data;
         commit('SET_FORM_DATA', {
-          nome: cliente.nome,
+          nome           : cliente.nome,
           data_nascimento: cliente.data_nascimento,
-          tipo_pessoa: cliente.tipo_pessoa,
-          documento: cliente.documento,
-          email: cliente.email,
-          telefone: cliente.telefone,
-          endereco: cliente.endereco.endereco,
-          numero: cliente.endereco.numero,
-          bairro: cliente.endereco.bairro,
-          complemento: cliente.endereco.complemento,
-          cidade: cliente.endereco.cidade,
-          uf: cliente.endereco.uf,
-          id_profissao: cliente.id_profissao
+          tipo_pessoa    : cliente.tipo_pessoa,
+          documento      : cliente.documento,
+          email          : cliente.email,
+          telefone       : cliente.telefone,
+          endereco       : cliente.endereco.endereco,
+          numero         : cliente.endereco.numero,
+          bairro         : cliente.endereco.bairro,
+          complemento    : cliente.endereco.complemento,
+          cidade         : cliente.endereco.cidade,
+          uf             : cliente.endereco.uf,
+          id_profissao   : cliente.id_profissao
         });
 
         return response.data;
@@ -181,6 +175,7 @@ export default {
 
         const response = await clienteService.createCliente(state.formData);
         commit('RESET_FORM_DATA');
+        localStorage.removeItem('clienteFormData');
 
         return response.data;
       } catch (error) {
@@ -224,24 +219,20 @@ export default {
       }
     },
 
-    // Ações para o formulário wizard
-    updateFormData({ commit }, formData) {
-      commit('SET_FORM_DATA', formData);
-      // Salvar no localStorage para recuperação em caso de reload da página
-      localStorage.setItem('clienteFormData', JSON.stringify(formData));
+    updateFormData({ commit, state }, data) {
+      commit('SET_FORM_DATA', data);
+      localStorage.setItem('clienteFormData', JSON.stringify(state.formData));
     },
 
     nextStep({ commit, state }) {
       if (state.currentStep < state.totalSteps) {
-        const proximo = state.currentStep + 1;
-        commit('SET_CURRENT_STEP', proximo);
+        commit('SET_CURRENT_STEP', state.currentStep + 1);
       }
     },
 
     previousStep({ commit, state }) {
       if (state.currentStep > 1) {
-        const anterior = state.currentStep - 1;
-        commit('SET_CURRENT_STEP', anterior);
+        commit('SET_CURRENT_STEP', state.currentStep - 1);
       }
     },
 
@@ -249,6 +240,11 @@ export default {
       commit('RESET_FORM_DATA');
       localStorage.removeItem('clienteFormData');
       localStorage.removeItem('clienteCurrentStep');
+    },
+
+    resetSteps({ commit }) {
+      commit('SET_CURRENT_STEP', 1);              
+      localStorage.removeItem('clienteCurrentStep'); 
     },
 
     loadSavedStep({ commit }) {
@@ -259,11 +255,11 @@ export default {
     },
 
     loadSavedFormData({ commit }) {
-      const savedData = localStorage.getItem('clienteFormData');
-      if (savedData) {
+      const saved = localStorage.getItem('clienteFormData');
+      if (saved) {
         try {
-          const parsedData = JSON.parse(savedData);
-          commit('SET_FORM_DATA', parsedData);
+          const parsed = JSON.parse(saved);
+          commit('SET_FORM_DATA', parsed);
         } catch (error) {
           console.error('Erro ao parsear dados salvos:', error);
           localStorage.removeItem('clienteFormData');

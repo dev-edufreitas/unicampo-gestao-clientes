@@ -1,15 +1,12 @@
 <template>
   <header class="app-header">
     <div class="nav-container">
-      <!-- Logo -->
       <div class="logo-container">
         <router-link to="/">
           <img src="@/assets/logo.png" alt="Logotipo da Unicampo" height="32" />
           <span class="logo-text">Unicampo</span>
         </router-link>
       </div>
-      
-      <!-- Links de Navegação -->
       <div class="nav-items">
         <div class="nav-item">
           <router-link to="/" class="nav-link" exact>
@@ -127,24 +124,22 @@
 .nav-link.router-link-exact-active,
 .nav-link.router-link-active {
   color: #ffffff;
-  background-color:#0a3b25;
+  background-color: #0a3b25;
 }
 
-
-/* Responsividade básica */
 @media (max-width: 768px) {
   .nav-container {
     flex-direction: column;
     border-radius: 14px;
     padding: 16px;
   }
-  
+
   .nav-items {
     margin-top: 16px;
     width: 100%;
     justify-content: center;
   }
-  
+
   .logo-container {
     margin-bottom: 8px;
   }

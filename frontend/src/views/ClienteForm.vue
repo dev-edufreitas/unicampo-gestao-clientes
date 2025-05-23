@@ -1,6 +1,5 @@
 <template>
   <div class="cliente-form pt-4" v-if="currentStepLocal !== null">
-    <!-- Cabeçalho -->
     <div class="d-flex justify-content-between align-items-center mb-5">
       <div>
         <h1 class="h2 fw-bold text-unicampo mb-2">
@@ -10,13 +9,10 @@
           {{ isEdicao ? 'Atualize as informações do cliente' : 'Preencha os dados para cadastrar um novo cliente' }}
         </p>
       </div>
-      <router-link to="/clientes" class="btn btn-outline-secondary">
-        <i class="fas fa-arrow-left me-2"></i>
+      <SecondaryButton icon="fas fa-arrow-left me-2" class="btn btn-outline-secondary" @click="voltarParaLista">
         Voltar para Lista
-      </router-link>
+      </SecondaryButton>
     </div>
-
-    <!-- Wizard de Etapas -->
     <div class="card border-0 rounded-4 shadow-sm mb-4">
       <div class="card-header bg-light border-0 rounded-top-4">
         <div class="wizard-container">
@@ -39,8 +35,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Conteúdo do Formulário -->
     <div class="card border-0 rounded-4 shadow-sm">
       <div class="card-body p-5">
         <div v-if="loading" class="text-center py-5">
@@ -66,24 +60,27 @@
 </template>
 
 <script>
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, onMounted } from 'vue';
 import { useStore } from 'vuex';
-import { useRoute } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import DadosPessoaisForm from '@/components/cliente/DadosPessoaisForm.vue';
 import EnderecoForm from '@/components/cliente/EnderecoForm.vue';
 import ProfissaoForm from '@/components/cliente/ProfissaoForm.vue';
 import { useClienteFormPersistence } from '@/composables/useClienteFormPersistence';
+import SecondaryButton from '@/components/ui/SecondaryButton.vue';
 
 export default {
   name: 'ClienteForm',
   components: {
     DadosPessoaisForm,
     EnderecoForm,
-    ProfissaoForm
+    ProfissaoForm,
+    SecondaryButton
   },
   setup() {
-    const store = useStore();
-    const route = useRoute();
+    const store            = useStore();
+    const route            = useRoute();
+    const router           = useRouter();
     const currentStepLocal = ref(null);
 
     const currentStep = computed(() => store.getters['cliente/getCurrentStep']);
@@ -105,6 +102,11 @@ export default {
       }
     };
 
+    const voltarParaLista = async () => {
+      await store.dispatch('cliente/resetSteps');
+      router.push('/clientes');
+    };
+
     watch(
       () => currentStep.value,
       (step) => {
@@ -112,6 +114,12 @@ export default {
       },
       { immediate: true }
     );
+
+    onMounted(() => {
+      if (!isEdicao.value) {
+        store.dispatch('cliente/resetForm');
+      }
+    });
 
     useClienteFormPersistence();
 
@@ -122,14 +130,120 @@ export default {
       loading,
       error,
       isEdicao,
-      getStepLabel
+      getStepLabel,
+      voltarParaLista
     };
   }
 };
 </script>
 
-
-
 <style scoped>
-@import '@/assets/css/view/client-form.css';
+.wizard-container {
+  padding: 2rem 1rem;
+}
+
+.wizard-steps {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.wizard-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  flex: 1;
+  z-index: 2;
+}
+
+.step-connector {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  right: -50%;
+  height: 2px;
+  background-color: #e9ecef;
+  z-index: -1;
+}
+
+.step-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #e9ecef;
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  margin-bottom: 12px;
+  transition: all 0.3s ease;
+  border: 3px solid transparent;
+}
+
+.step-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #6c757d;
+  text-align: center;
+  transition: color 0.3s ease;
+}
+
+.wizard-step.completed .step-connector {
+  background-color: #0a3b25;
+}
+
+.wizard-step.active .step-connector {
+  background: linear-gradient(to right, #0a3b25 50%, #e9ecef 50%);
+}
+
+.wizard-step.active .step-circle {
+  background-color: #0a3b25;
+  color: white;
+  border-color: rgba(10, 59, 37, 0.2);
+  box-shadow: 0 0 0 4px rgba(10, 59, 37, 0.1);
+}
+
+.wizard-step.completed .step-circle {
+  background-color: #0a3b25;
+  color: white;
+}
+
+.wizard-step.active .step-label {
+  color: #0a3b25;
+  font-weight: 600;
+}
+
+.wizard-step.completed .step-label {
+  color: #0a3b25;
+}
+
+@media (max-width: 768px) {
+  .wizard-container {
+    padding: 1rem 0.5rem;
+  }
+
+  .step-circle {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+
+  .step-label {
+    font-size: 12px;
+  }
+
+  .cliente-form .d-flex.justify-content-between {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .cliente-form .d-flex.justify-content-between .btn {
+    align-self: flex-start;
+  }
+}
 </style>

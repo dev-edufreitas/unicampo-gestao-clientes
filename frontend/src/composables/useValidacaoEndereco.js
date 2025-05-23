@@ -1,5 +1,13 @@
 import { watch } from 'vue';
 
+/**
+ * Monitora os campos do formulário de endereço e atualiza as mensagens de erro em tempo real:
+ * - Para cada campo obrigatório (endereco, numero, bairro, cidade, uf), ao detectar uma mudança,
+ *   primeiro limpa a mensagem de erro; se o novo valor estiver vazio (ou só com espaços), 
+ *   atribui a mensagem de erro correspondente.
+ * - O campo 'complemento' também é observado apenas para limpar qualquer erro existente
+ *   sempre que seu valor for alterado.
+ */
 export function useValidacaoEndereco(form, errors) {
   watch(() => form.value.endereco, (val) => {
     errors.value.endereco = '';
@@ -26,7 +34,6 @@ export function useValidacaoEndereco(form, errors) {
     if (!val) errors.value.uf = 'O estado é obrigatório';
   });
 
-  // Complemento é opcional, mas zera erro se houver algum
   watch(() => form.value.complemento, () => {
     errors.value.complemento = '';
   });

@@ -1,6 +1,5 @@
 <template>
   <div class="endereco-form">
-    <!-- Cabeçalho da Seção -->
     <div class="section-header mb-4">
       <div class="d-flex align-items-center mb-3">
         <div class="section-icon">
@@ -12,42 +11,34 @@
         </div>
       </div>
     </div>
-
-    <!-- Formulário -->
     <div class="form-grid">
       <div class="row g-4">
         <div class="col-md-8">
           <InputField id="endereco" label="Endereço" v-model="form.endereco" :maxlength="255" :error="errors.endereco"
             placeholder="Rua, Avenida, Parque..." prepend-icon="fas fa-road" required />
         </div>
-
         <div class="col-md-4">
           <InputField id="numero" label="Número" v-model="form.numero" :maxlength="20" :error="errors.numero"
             placeholder="123" prepend-icon="fas fa-hashtag" required />
         </div>
-
         <div class="col-md-6">
           <InputField id="bairro" label="Bairro" v-model="form.bairro" :maxlength="255" :error="errors.bairro"
             placeholder="Nome do bairro" prepend-icon="fas fa-map" required />
         </div>
-
         <div class="col-md-6">
           <InputField id="complemento" label="Complemento" v-model="form.complemento" :maxlength="255"
             :error="errors.complemento" placeholder="Apartamento, sala, bloco... (opcional)"
             prepend-icon="fas fa-building" />
         </div>
-
         <div class="col-md-8">
           <InputField id="cidade" label="Cidade" v-model="form.cidade" :maxlength="255" :error="errors.cidade"
             placeholder="Nome da cidade" prepend-icon="fas fa-city" required />
         </div>
-
         <div class="col-md-4">
           <SelectField id="uf" label="Estado (UF)" v-model="form.uf" :options="estados" :error="errors.uf" required />
         </div>
       </div>
     </div>
-
     <div v-if="enderecoCompleto" class="endereco-preview">
       <div class="preview-header">
         <i class="fas fa-eye me-2"></i>
@@ -55,8 +46,6 @@
       </div>
       <div class="preview-content">{{ enderecoCompleto }}</div>
     </div>
-
-    <!-- Ações -->
     <div class="form-actions">
       <div class="d-flex justify-content-between">
         <button type="button" class="btn btn-outline-secondary" @click="voltar">
@@ -83,9 +72,8 @@ export default {
   name: 'EnderecoForm',
   components: { InputField, SelectField },
   setup() {
-    const store = useStore();
+    const store    = useStore();
     const formData = store.getters['cliente/getFormData'];
-
     const form = ref({
       endereco: formData.endereco || '',
       numero: formData.numero || '',
@@ -107,16 +95,16 @@ export default {
           uf: novo.uf || ''
         };
       },
-      { immediate: true }
+      { immediate: true, deep: true }
     );
 
     const errors = ref({
-      endereco: '',
-      numero: '',
-      bairro: '',
+      endereco   : '',
+      numero     : '',
+      bairro     : '',
       complemento: '',
-      cidade: '',
-      uf: ''
+      cidade     : '',
+      uf         : ''
     });
 
     const estados = [
@@ -191,7 +179,6 @@ export default {
       { deep: true }
     );
 
-
     useValidacaoEndereco(form, errors);
 
     return {
@@ -207,7 +194,95 @@ export default {
 };
 </script>
 
-
 <style scoped>
-@import '@/assets/css/components/endereco.css';
+.section-header {
+  border-bottom: 2px solid #f8f9fa;
+  padding-bottom: 1rem;
+}
+
+.section-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #0a3b25 0%, #0d4a2d 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  margin-right: 1rem;
+  font-size: 1.2rem;
+}
+
+.section-title {
+  color: #0a3b25;
+  font-weight: 600;
+  margin: 0;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 8px;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  height: 3px;
+  width: 50px;
+  background-color: #0a3b25;
+  bottom: 0;
+  left: 0;
+  border-radius: 3px;
+}
+
+.section-description {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.form-grid {
+  margin-bottom: 2rem;
+}
+
+.endereco-preview {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 1px solid #dee2e6;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.preview-header {
+  color: #0a3b25;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.preview-content {
+  color: #495057;
+  font-size: 1rem;
+  line-height: 1.5;
+  padding: 0.75rem;
+  background: white;
+  border-radius: 8px;
+  border-left: 4px solid #0a3b25;
+}
+
+.form-actions {
+  border-top: 2px solid #f8f9fa;
+  padding-top: 2rem;
+}
+
+@media (max-width: 768px) {
+  .section-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .endereco-preview {
+    padding: 1rem;
+  }
+}
 </style>

@@ -1,23 +1,12 @@
 <template>
   <div class="mb-4">
     <label v-if="label" :for="id" class="form-label text-unicampo fw-semibold">{{ label }}</label>
-
-    <select
-      :id="id"
-      class="form-select custom-select"
-      v-model="modelValueLocal"
-      :disabled="disabled"
-    >
+    <select :id="id" class="form-select custom-select" v-model="modelValueLocal" :disabled="disabled">
       <option value="" disabled hidden>{{ placeholder }}</option>
-      <option
-        v-for="(option, index) in options"
-        :key="index"
-        :value="option.value"
-      >
+      <option v-for="(option, index) in options" :key="index" :value="option.value">
         {{ option.label }}
       </option>
     </select>
-
     <small v-if="helper" class="form-text text-muted">{{ helper }}</small>
     <div v-if="error" class="invalid-feedback d-block">{{ error }}</div>
   </div>
@@ -27,7 +16,7 @@
 export default {
   name: 'SelectField',
   props: {
-    modelValue: [String, Number],
+    modelValue: [String, Number, Boolean],
     label: String,
     placeholder: {
       type: String,
@@ -73,9 +62,5 @@ export default {
 .custom-select:focus {
   border-color: #0a3b25;
   box-shadow: 0 0 0 0.2rem rgba(10, 59, 37, 0.25);
-}
-
-.invalid-feedback {
-  color: #dc3545;
 }
 </style>

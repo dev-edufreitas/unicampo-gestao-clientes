@@ -1,12 +1,10 @@
 <template>
   <div class="mb-4">
     <label v-if="label" :for="id" class="form-label text-unicampo fw-semibold">{{ label }}</label>
-
     <div class="input-group">
       <span v-if="prependIcon" class="input-group-text">
         <i :class="prependIcon" class="text-muted"></i>
       </span>
-
       <input
         :id="id"
         :type="type"
@@ -17,7 +15,6 @@
         :autocomplete="autocomplete"
       />
     </div>
-
     <small v-if="helper" class="form-text text-muted">{{ helper }}</small>
     <div v-if="error" class="invalid-feedback d-block">{{ error }}</div>
   </div>
@@ -27,26 +24,26 @@
 export default {
   name: 'InputField',
   props: {
-    modelValue: [String, Number],
-    label: String,
+    modelValue : [String, Number],
+    label      : String,
     placeholder: String,
-    error: String,
-    helper: String,
+    error      : String,
+    helper     : String,
     prependIcon: String,
     type: {
-      type: String,
+      type   : String,
       default: 'text'
     },
     id: {
-      type: String,
+      type   : String,
       default: () => `input-${Math.random().toString(36).substr(2, 9)}`
     },
     disabled: {
-      type: Boolean,
+      type   : Boolean,
       default: false
     },
     autocomplete: {
-      type: String,
+      type   : String,
       default: 'off'
     }
   },
@@ -75,9 +72,5 @@ export default {
 .custom-input:focus {
   border-color: #0a3b25;
   box-shadow: 0 0 0 0.2rem rgba(10, 59, 37, 0.25);
-}
-
-.invalid-feedback {
-  color: #dc3545;
 }
 </style>

@@ -1,13 +1,18 @@
 import { watch } from 'vue';
 import { validaCPF, validaCNPJ, validaEmail } from '@/utils/validators';
 
+/**
+ * Monitora e valida os campos do formulário de cliente, atualizando mensagens de erro.
+ */
 export function useValidacaoCliente(form, errors, documentoLabel) {
+  // Nome: obrigatório e até 255 caracteres
   watch(() => form.value.nome, (val) => {
     errors.value.nome = '';
     if (!val.trim()) errors.value.nome = 'O nome é obrigatório';
     else if (val.length > 255) errors.value.nome = 'O nome deve ter no máximo 255 caracteres';
   });
 
+  // Data de nascimento: obrigatório e anterior à data atual
   watch(() => form.value.data_nascimento, (val) => {
     errors.value.data_nascimento = '';
     if (!val) {
@@ -21,6 +26,7 @@ export function useValidacaoCliente(form, errors, documentoLabel) {
     }
   });
 
+  // Tipo de pessoa: obrigatório
   watch(() => form.value.tipo_pessoa, (val) => {
     errors.value.tipo_pessoa = '';
     if (!val) {
@@ -28,6 +34,7 @@ export function useValidacaoCliente(form, errors, documentoLabel) {
     }
   });
 
+  // Documento: obrigatório; valida CPF para pessoa física e CNPJ para jurídica
   watch(() => form.value.documento, (val) => {
     errors.value.documento = '';
     const doc = val.replace(/[^\d]/g, '');
@@ -40,17 +47,20 @@ export function useValidacaoCliente(form, errors, documentoLabel) {
     }
   });
 
+  // Email: obrigatório e formato válido
   watch(() => form.value.email, (val) => {
     errors.value.email = '';
     if (!val) errors.value.email = 'O email é obrigatório';
     else if (!validaEmail(val)) errors.value.email = 'Email inválido';
   });
 
+  // Telefone: obrigatório e com DDD + 8 ou 9 dígitos
   watch(() => form.value.telefone, (val) => {
     errors.value.telefone = '';
     const tel = val.replace(/[^\d]/g, '');
-    if (!tel) errors.value.telefone = 'O telefone é obrigatório';
-    else if (tel.length < 10 || tel.length > 11) {
+    if (!tel) {
+      errors.value.telefone = 'O telefone é obrigatório';
+    } else if (tel.length < 10 || tel.length > 11) {
       errors.value.telefone = 'O telefone deve conter DDD + 8 ou 9 dígitos';
     }
   });

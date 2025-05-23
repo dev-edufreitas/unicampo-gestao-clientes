@@ -15,6 +15,42 @@
         }
     ],
     "paths": {
+        "/clientes/stats": {
+            "get": {
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Obter estatísticas dos clientes",
+                "description": "Retorna as 3 estatísticas principais: Total, Ativos e Novos do Mês",
+                "operationId": "getClientesStats",
+                "responses": {
+                    "200": {
+                        "description": "Estatísticas dos clientes",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "total_clientes": {
+                                            "type": "string",
+                                            "example": "1,247"
+                                        },
+                                        "clientes_ativos": {
+                                            "type": "string",
+                                            "example": "1,089"
+                                        },
+                                        "novos_mes": {
+                                            "type": "string",
+                                            "example": "43"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/clientes": {
             "get": {
                 "tags": [
@@ -71,9 +107,7 @@
                         }
                     }
                 }
-            }
-        },
-        "/api/v1/clientes": {
+            },
             "post": {
                 "tags": [
                     "Clientes"
@@ -108,7 +142,7 @@
                 }
             }
         },
-        "/api/v1/clientes/{id}": {
+        "/clientes/{id}": {
             "get": {
                 "tags": [
                     "Clientes"
@@ -134,6 +168,93 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/Cliente"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cliente não encontrado"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Atualizar cliente",
+                "description": "Atualiza os dados de um cliente existente",
+                "operationId": "updateCliente",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do cliente",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ClienteRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Cliente atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ClienteResponse"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Cliente não encontrado"
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Clientes"
+                ],
+                "summary": "Inativar cliente",
+                "description": "Inativa um cliente (não remove do banco)",
+                "operationId": "deleteCliente",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do cliente",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Cliente inativado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Cliente inativado com sucesso"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }

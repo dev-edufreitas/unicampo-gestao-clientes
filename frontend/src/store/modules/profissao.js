@@ -5,14 +5,14 @@ export default {
   
   state: {
     profissoes: [],
-    loading: false,
-    error: null
+    loading   : false,
+    error     : null
   },
   
   getters: {
-    isLoading: state => state.loading,
-    hasError: state => state.error !== null,
-    getError: state => state.error,
+    isLoading    : state => state.loading,
+    hasError     : state => state.error !== null,
+    getError     : state => state.error,
     getProfissoes: state => state.profissoes
   },
   

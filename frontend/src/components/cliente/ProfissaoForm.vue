@@ -11,18 +11,11 @@
         </div>
       </div>
     </div>
-
     <div class="form-grid">
       <div class="row g-4">
         <div class="col-12">
-          <SelectField
-            id="id_profissao"
-            label="Profissão"
-            v-model="form.id_profissao"
-            :options="profissoesOptions"
-            :error="errors.id_profissao"
-            required
-          />
+          <SelectField id="id_profissao" label="Profissão" v-model="form.id_profissao" :options="profissoesOptions"
+            :error="errors.id_profissao" required />
           <div class="info-box mt-3">
             <div class="info-header">
               <i class="fas fa-info-circle me-2"></i>
@@ -36,13 +29,11 @@
         </div>
       </div>
     </div>
-
     <div class="resumo-dados">
       <div class="resumo-header">
         <i class="fas fa-clipboard-check me-2"></i>
         <strong>Resumo dos Dados Cadastrais</strong>
       </div>
-
       <div class="resumo-content">
         <div class="row g-3">
           <div class="col-md-6">
@@ -69,7 +60,6 @@
               </div>
             </div>
           </div>
-
           <div class="col-md-6">
             <div class="resumo-section">
               <h6 class="resumo-section-title">
@@ -83,7 +73,8 @@
               <div class="resumo-item">
                 <span class="label">Cidade/UF:</span>
                 <span class="value">
-                  {{ dadosResumo.cidade && dadosResumo.uf ? `${dadosResumo.cidade}/${dadosResumo.uf}` : 'Não informado' }}
+                  {{ dadosResumo.cidade && dadosResumo.uf ? `${dadosResumo.cidade}/${dadosResumo.uf}` : 'Não informado'
+                  }}
                 </span>
               </div>
             </div>
@@ -91,12 +82,11 @@
         </div>
       </div>
     </div>
-
     <div class="form-actions">
       <div class="d-flex justify-content-between">
-        <button type="button" class="btn btn-outline-secondary" @click="voltar">
+        <SecondaryButton type="button" class="btn btn-outline-secondary" @click="voltar">
           <i class="fas fa-arrow-left me-2"></i> Voltar
-        </button>
+        </SecondaryButton>
         <PrincipalButton type="button" icon="fas fa-save" :disabled="!isFormValid || loading" @click="handleSalvar">
           {{ isEdicao ? 'Atualizar Cliente' : 'Cadastrar Cliente' }}
         </PrincipalButton>
@@ -111,13 +101,15 @@ import { useStore } from 'vuex';
 import { useRouter, useRoute } from 'vue-router';
 import SelectField from '@/components/ui/SelectField.vue';
 import PrincipalButton from '@/components/ui/PrincipalButton.vue';
+import SecondaryButton from '@/components/ui/SecondaryButton.vue';
 import eventBus from '@/utils/eventBus';
 
 export default {
   name: 'ProfissaoForm',
   components: {
     SelectField,
-    PrincipalButton
+    PrincipalButton,
+    SecondaryButton
   },
   setup() {
     const store  = useStore();
@@ -125,12 +117,12 @@ export default {
     const route  = useRoute();
 
     const formData = store.getters['cliente/getFormData'];
-    const form = ref({ id_profissao: formData.id_profissao || '' });
-    const errors = ref({ id_profissao: '' });
-    const loading = ref(false);
+    const form     = ref({ id_profissao: formData.id_profissao || '' });
+    const errors   = ref({ id_profissao: '' });
+    const loading  = ref(false);
 
     const profissoesOptions = computed(() => {
-      const opcoes = [{ value: '', label: 'Selecione uma profissão' }];
+      const opcoes     = [{ value: '', label: 'Selecione uma profissão' }];
       const profissoes = store.getters['profissao/getProfissoes'].map(p => ({
         value: p.id,
         label: p.nome_profissao
@@ -138,7 +130,7 @@ export default {
       return [...opcoes, ...profissoes];
     });
 
-    const dadosResumo = computed(() => store.getters['cliente/getFormData']);
+    const dadosResumo      = computed(() => store.getters['cliente/getFormData']);
     const enderecoCompleto = computed(() => {
       const dados = dadosResumo.value;
       if (dados.endereco && dados.numero) {
@@ -191,11 +183,9 @@ export default {
         }
 
         store.dispatch('cliente/resetForm');
-        setTimeout(() => router.push({ name: 'clientes' }), 1500);
+        router.push({ name: 'clientes' });
 
       } catch (error) {
-        console.error('Erro ao salvar cliente:', error);
-
         if (error.response?.data?.errors) {
           const apiErrors = error.response.data.errors;
           Object.keys(apiErrors).forEach(key => {
@@ -244,5 +234,163 @@ export default {
 </script>
 
 <style scoped>
-@import '@/assets/css/components/profissao.css';
+.section-header {
+  border-bottom: 2px solid #f8f9fa;
+  padding-bottom: 1rem;
+}
+
+.section-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #0a3b25 0%, #0d4a2d 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  margin-right: 1rem;
+  font-size: 1.2rem;
+}
+
+.section-title {
+  color: #0a3b25;
+  font-weight: 600;
+  margin: 0;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 8px;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  height: 3px;
+  width: 50px;
+  background-color: #0a3b25;
+  bottom: 0;
+  left: 0;
+  border-radius: 3px;
+}
+
+.section-description {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.form-grid {
+  margin-bottom: 2rem;
+}
+
+.info-box {
+  background: linear-gradient(135deg, #e3f2fd 0%, #f0f8ff 100%);
+  border: 1px solid #bbdefb;
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.info-header {
+  color: #1976d2;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.info-content {
+  color: #424242;
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.resumo-dados {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 1px solid #dee2e6;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.resumo-header {
+  color: #0a3b25;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.resumo-content {
+  background: white;
+  border-radius: 8px;
+  padding: 1.25rem;
+}
+
+.resumo-section {
+  margin-bottom: 1rem;
+}
+
+.resumo-section-title {
+  color: #0a3b25;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.resumo-item {
+  display: flex;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.resumo-item .label {
+  font-weight: 600;
+  color: #495057;
+  min-width: 80px;
+  margin-right: 0.5rem;
+}
+
+.resumo-item .value {
+  color: #212529;
+  flex: 1;
+  word-break: break-word;
+}
+
+.form-actions {
+  border-top: 2px solid #f8f9fa;
+  padding-top: 2rem;
+}
+
+.btn-save {
+  position: relative;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .section-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .resumo-dados {
+    padding: 1rem;
+  }
+
+  .resumo-content {
+    padding: 1rem;
+  }
+
+  .resumo-item {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .resumo-item .label {
+    min-width: auto;
+    margin-right: 0;
+  }
+}
 </style>
