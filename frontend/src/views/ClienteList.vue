@@ -56,7 +56,6 @@
       </div>
     </div>
 
-    <!-- Estados -->
     <div v-if="loading" class="text-center py-5">
       <div class="spinner-border text-unicampo" role="status">
         <span class="visually-hidden">Carregando...</span>
@@ -211,41 +210,5 @@ export default {
 </script>
 
 <style scoped>
-.text-unicampo {
-  color: #0a3b25;
-}
-
-.btn-unicampo {
-  background-color: #0a3b25;
-  color: white;
-  border: none;
-}
-
-.btn-unicampo:hover {
-  background-color: #083d26;
-}
-
-.table th {
-  font-weight: 600;
-  color: #495057;
-}
-
-.table td,
-.table th {
-  vertical-align: middle;
-  padding: 0.75rem;
-}
-
-.table-hover tbody tr:hover {
-  background-color: #f8f9fa;
-}
-
-.badge {
-  font-size: 0.75rem;
-  padding: 0.4em 0.6em;
-}
-
-.btn-group .btn {
-  padding: 0.375rem 0.6rem;
-}
+@import '@/assets/css/view/client-list.css';
 </style>

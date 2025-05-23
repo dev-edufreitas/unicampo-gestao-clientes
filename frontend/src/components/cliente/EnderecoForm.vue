@@ -209,5 +209,5 @@ export default {
 
 
 <style scoped>
-@import '@/assets/css/form-helpers.css';
+@import '@/assets/css/components/endereco.css';
 </style>

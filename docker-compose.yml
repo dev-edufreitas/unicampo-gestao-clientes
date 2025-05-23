@@ -50,8 +50,6 @@ services:
       --innodb-log-file-size=64M
       --max-connections=100
       --table-open-cache=2000
-      --query-cache-type=1
-      --query-cache-size=32M
       --thread-cache-size=50
       --open-files-limit=65535
       --innodb-flush-method=O_DIRECT

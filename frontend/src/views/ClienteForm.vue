@@ -87,10 +87,10 @@ export default {
     const currentStepLocal = ref(null);
 
     const currentStep = computed(() => store.getters['cliente/getCurrentStep']);
-    const totalSteps = computed(() => store.getters['cliente/getTotalSteps']);
-    const loading = computed(() => store.getters['cliente/isLoading']);
-    const error = computed(() => store.getters['cliente/getError']);
-    const isEdicao = computed(() => !!route.params.id);
+    const totalSteps  = computed(() => store.getters['cliente/getTotalSteps']);
+    const loading     = computed(() => store.getters['cliente/isLoading']);
+    const error       = computed(() => store.getters['cliente/getError']);
+    const isEdicao    = computed(() => !!route.params.id);
 
     const getStepLabel = (step) => {
       switch (step) {
@@ -131,116 +131,5 @@ export default {
 
 
 <style scoped>
-.text-unicampo {
-  color: #0a3b25;
-}
-
-.wizard-container {
-  padding: 2rem 1rem;
-}
-
-.wizard-steps {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.wizard-step {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  flex: 1;
-  z-index: 2;
-}
-
-.step-connector {
-  position: absolute;
-  top: 20px;
-  left: 50%;
-  right: -50%;
-  height: 2px;
-  background-color: #e9ecef;
-  z-index: -1;
-}
-
-.wizard-step.completed .step-connector {
-  background-color: #0a3b25;
-}
-
-.wizard-step.active .step-connector {
-  background: linear-gradient(to right, #0a3b25 50%, #e9ecef 50%);
-}
-
-.step-circle {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: #e9ecef;
-  color: #6c757d;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  margin-bottom: 12px;
-  transition: all 0.3s ease;
-  border: 3px solid transparent;
-}
-
-.wizard-step.active .step-circle {
-  background-color: #0a3b25;
-  color: white;
-  border-color: rgba(10, 59, 37, 0.2);
-  box-shadow: 0 0 0 4px rgba(10, 59, 37, 0.1);
-}
-
-.wizard-step.completed .step-circle {
-  background-color: #0a3b25;
-  color: white;
-}
-
-.step-label {
-  font-size: 14px;
-  font-weight: 500;
-  color: #6c757d;
-  text-align: center;
-  transition: color 0.3s ease;
-}
-
-.wizard-step.active .step-label {
-  color: #0a3b25;
-  font-weight: 600;
-}
-
-.wizard-step.completed .step-label {
-  color: #0a3b25;
-}
-
-@media (max-width: 768px) {
-  .wizard-container {
-    padding: 1rem 0.5rem;
-  }
-
-  .step-circle {
-    width: 32px;
-    height: 32px;
-    font-size: 14px;
-  }
-
-  .step-label {
-    font-size: 12px;
-  }
-
-  .cliente-form .d-flex.justify-content-between {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .cliente-form .d-flex.justify-content-between .btn {
-    align-self: flex-start;
-  }
-}
+@import '@/assets/css/view/client-form.css';
 </style>

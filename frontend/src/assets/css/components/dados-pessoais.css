@@ -11,7 +11,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #fff;
+  color: white;
   margin-right: 1rem;
   font-size: 1.2rem;
 }
@@ -70,33 +70,6 @@
 .btn-outline-secondary:hover {
   transform: translateY(-1px);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.endereco-preview {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  border: 1px solid #dee2e6;
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.preview-header {
-  color: #0a3b25;
-  font-weight: 600;
-  margin-bottom: 0.75rem;
-  font-size: 0.9rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.preview-content {
-  color: #495057;
-  font-size: 1rem;
-  line-height: 1.5;
-  padding: 0.75rem;
-  background: white;
-  border-radius: 8px;
-  border-left: 4px solid #0a3b25;
 }
 
 @media (max-width: 768px) {

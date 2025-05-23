@@ -174,6 +174,6 @@ export default {
 };
 </script>
 
-<style scoped>
-@import '@/assets/css/form-helpers.css';
+<style scoped >
+@import '@/assets/css/components/dados-pessoais.css';
 </style>

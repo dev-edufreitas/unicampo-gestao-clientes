@@ -72,7 +72,6 @@ export default {
     },
 
     SET_FORM_DATA(state, formData) {
-      console.log('🧠 SET_FORM_DATA acionado com:', formData);
       Object.assign(state.formData, formData);
     },
 
