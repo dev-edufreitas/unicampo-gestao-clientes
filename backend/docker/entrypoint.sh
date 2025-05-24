@@ -45,4 +45,9 @@ else
 fi
 
 echo "🚀 Iniciando Apache…"
+if [ "$1" = "test" ]; then
+  echo "🧪 Executando testes..."
+  XDEBUG_MODE=coverage php artisan test
+  exit $?
+fi
 exec apache2-foreground

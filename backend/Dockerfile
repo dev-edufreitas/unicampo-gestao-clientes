@@ -11,8 +11,9 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     default-mysql-client \
-    && docker-php-ext-install pdo_mysql zip exif pcntl bcmath gd \
-    && apt-get clean \
+    sqlite3 \  
+    libsqlite3-dev \  
+    && docker-php-ext-install pdo_mysql pdo_sqlite zip exif pcntl bcmath gd \
     && rm -rf /var/lib/apt/lists/*
 
 # Instalar e configurar OPcache para melhor performance
@@ -42,15 +43,10 @@ RUN composer install --no-interaction --no-plugins --no-scripts --no-dev --optim
 COPY . .
 
 # Otimizar autoloader do Composer
-RUN composer dump-autoload --optimize --no-dev
+RUN composer dump-autoload --optimize --no-dev --no-scripts
 
 # Configurar permissões
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
-
-# Cache de configuração do Laravel
-RUN php artisan config:cache && \
-    php artisan route:cache && \
-    php artisan view:cache
 
 # Expor porta
 EXPOSE 80
