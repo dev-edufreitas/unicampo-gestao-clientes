@@ -59,9 +59,8 @@ Aguarde a inicialização completa dos serviços. O processo pode levar alguns m
 - Listagem e busca de clientes
 - Edição de dados dos clientes
 - Validação automática de CPF/CNPJ
-- Gerenciamento de endereços
-- Controle de profissões
-- Dashboard com estatísticas
+- Inativação de clientes
+- Dashboard com estatísticas dos clientes
 - API RESTful completa e documentada
 - Testes automatizados (unitários e de integração)
 
