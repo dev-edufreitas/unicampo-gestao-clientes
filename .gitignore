@@ -21,6 +21,7 @@
 /backend/npm-debug.log
 /backend/yarn-error.log
 /backend/auth.json
+/backend/storage/.migrated
 
 # --- TOOLS / IDEs ---
 /.vscode/
