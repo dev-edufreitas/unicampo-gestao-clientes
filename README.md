@@ -38,7 +38,7 @@ Este projeto é um teste prático para a Unicampo, que implementa um sistema com
 ### Passos
 
 ```bash
-git clone https://github.com/dev-edufreitas/unicampo-client-manager.git
+git clone https://github.com/dev-edufreitas/unicampo-gestao-clientes.git
 cd unicampo-client-manager
 docker-compose up -d --build
 ```
