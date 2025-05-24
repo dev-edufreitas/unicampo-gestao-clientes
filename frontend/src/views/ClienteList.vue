@@ -5,7 +5,7 @@
         <h1 class="h2 fw-bold text-unicampo mb-2">Lista de Clientes</h1>
         <p class="text-muted mb-0">Gerencie e visualize todos os seus clientes cadastrados</p>
       </div>
-      <PrincipalButton to="/clientes/novo" icon="fas fa-user-plus">
+      <PrincipalButton @click="irParaNovoCliente" icon="fas fa-user-plus">
         Novo Cliente
       </PrincipalButton>
     </div>
@@ -36,11 +36,10 @@
             <div class="col-md-3">
               <label class="form-label">Ações</label>
               <div class="d-flex gap-2 align-items-center ">
-                <PrincipalButton type="submit" icon="fas fa-search" class="w-100 ">
+                <PrincipalButton type="submit" icon="fas fa-search" class="w-100">
                   Buscar
                 </PrincipalButton>
-                <SecondaryButton type="button" icon="fas fa-eraser me-1" class="w-100 "
-                  @click="limparFiltros">
+                <SecondaryButton type="button" icon="fas fa-eraser me-1" class="w-100" @click="limparFiltros">
                   Limpar
                 </SecondaryButton>
               </div>
@@ -129,11 +128,10 @@
                   <ul class="dropdown-menu" :aria-labelledby="`acoesDropdown-${cliente.id}`"
                     style="z-index: 1050 !important;">
                     <li>
-                      <router-link :to="`/clientes/${cliente.id}/editar`"
-                        class="dropdown-item d-flex align-items-center">
+                     <button class="dropdown-item d-flex align-items-center"  @click="editarCliente(cliente.id)">
                         <i class="fas fa-pen me-2"></i>
                         <span>Editar</span>
-                      </router-link>
+                        </button>
                     </li>
                     <li v-if="cliente.status === 'ativo'">
                       <button class="dropdown-item text-danger d-flex align-items-center"
@@ -178,8 +176,30 @@ export default {
     const loading  = computed(() => store.getters['cliente/isLoading']);
     const error    = computed(() => store.getters['cliente/getError']);
 
+    const irParaNovoCliente = async () => {
+      try {
+        await store.dispatch('cliente/resetForm')
+        await router.push({ path: '/clientes/novo' })
+      } catch (error) {
+        console.error('Erro ao ir para novo cliente:', error)
+      }
+    }
+
+    const editarCliente = async (id) => {
+      try {
+        await store.dispatch('cliente/resetSteps');
+        await router.push({ path: `/clientes/${id}/editar` });
+      } catch (err) {
+        console.error('Erro ao editar cliente:', err);
+      }
+    };
+
     const buscarClientes = async () => {
-      await store.dispatch('cliente/fetchClientes', filtros.value);
+      try {
+        await store.dispatch('cliente/fetchClientes', filtros.value);
+      } catch (error) {
+        console.error('Erro ao buscar clientes:', error);
+      }
     };
 
     const limparFiltros = () => {
@@ -213,7 +233,9 @@ export default {
       buscarClientes,
       limparFiltros,
       inativarCliente,
-      formatarDocumento
+      formatarDocumento,
+      editarCliente,
+      irParaNovoCliente
     };
   }
 };

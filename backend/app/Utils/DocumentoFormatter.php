@@ -10,9 +10,9 @@ class DocumentoFormatter
         $documento = preg_replace('/[^0-9]/', '', $documento);
 
         return match($tipoPessoa) {
-            'fisica' => self::formatarCPF($documento),
+            'fisica'   => self::formatarCPF($documento),
             'juridica' => self::formatarCNPJ($documento),
-            default => $documento
+            default    => $documento
         };
     }
 
@@ -37,8 +37,7 @@ class DocumentoFormatter
     public static function formatarTelefone(string $telefone): string
     {
         $telefone = preg_replace('/[^0-9]/', '', $telefone);
-
-        $ddd = substr($telefone, 0, 2);
+        $ddd      = substr($telefone, 0, 2);
 
         if (strlen($telefone) === 11) {
             $parte1 = substr($telefone, 2, 5);

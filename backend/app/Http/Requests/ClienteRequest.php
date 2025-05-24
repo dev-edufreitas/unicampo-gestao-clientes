@@ -21,10 +21,9 @@ class ClienteRequest extends FormRequest
      */
     public function rules(): array
     {
-        $clienteId = $this->route('id'); // Para updates (PUT/PATCH)
+        $clienteId = $this->route('id'); 
 
         return [
-            // Dados Pessoais
             'nome' => [
                 'required',
                 'string',
@@ -53,11 +52,7 @@ class ClienteRequest extends FormRequest
                     }
                 },
             ],
-            'email' => [
-                'required',
-                'email:rfc,dns',
-                Rule::unique('clientes', 'email')->ignore($clienteId),
-            ],
+            'email' => 'required|email|unique:clientes,email,' . $this->route('id'),
             'telefone' => [
                 'required',
                 'string',
@@ -68,8 +63,6 @@ class ClienteRequest extends FormRequest
                     }
                 },
             ],
-            
-            // Dados do Endereço
             'endereco' => [
                 'required',
                 'string',
@@ -101,15 +94,11 @@ class ClienteRequest extends FormRequest
                 'size:2',
                 'uppercase'
             ],
-            
-            // Profissão
             'id_profissao' => [
                 'required',
                 'integer',
                 'exists:profissoes,id'
             ],
-            
-            // Status (apenas para updates)
             'status' => [
                 'sometimes',
                 'required',
@@ -126,60 +115,60 @@ class ClienteRequest extends FormRequest
         return [
             // Dados Pessoais
             'nome.required' => 'O nome é obrigatório.',
-            'nome.string' => 'O nome deve ser um texto válido.',
-            'nome.max' => 'O nome deve ter no máximo 255 caracteres.',
+            'nome.string'   => 'O nome deve ser um texto válido.',
+            'nome.max'      => 'O nome deve ter no máximo 255 caracteres.',
             
             'data_nascimento.required' => 'A data de nascimento é obrigatória.',
-            'data_nascimento.date' => 'A data de nascimento deve ser uma data válida.',
-            'data_nascimento.before' => 'A data de nascimento deve ser anterior à data atual.',
+            'data_nascimento.date'     => 'A data de nascimento deve ser uma data válida.',
+            'data_nascimento.before'   => 'A data de nascimento deve ser anterior à data atual.',
             
             'tipo_pessoa.required' => 'O tipo de pessoa é obrigatório.',
-            'tipo_pessoa.in' => 'O tipo de pessoa deve ser física ou jurídica.',
+            'tipo_pessoa.in'       => 'O tipo de pessoa deve ser física ou jurídica.',
             
             'documento.required' => 'O documento é obrigatório.',
-            'documento.string' => 'O documento deve ser um texto válido.',
-            'documento.unique' => 'Este documento já está cadastrado no sistema.',
+            'documento.string'   => 'O documento deve ser um texto válido.',
+            'documento.unique'   => 'Este documento já está cadastrado no sistema.',
             
             'email.required' => 'O email é obrigatório.',
-            'email.email' => 'O email deve ter um formato válido.',
-            'email.unique' => 'Este email já está cadastrado no sistema.',
+            'email.email'    => 'O email deve ter um formato válido.',
+            'email.unique'   => 'Este email já está cadastrado no sistema.',
             
             'telefone.required' => 'O telefone é obrigatório.',
-            'telefone.string' => 'O telefone deve ser um texto válido.',
+            'telefone.string'   => 'O telefone deve ser um texto válido.',
             
-            // Endereço
+              // Endereço
             'endereco.required' => 'O endereço é obrigatório.',
-            'endereco.string' => 'O endereço deve ser um texto válido.',
-            'endereco.max' => 'O endereço deve ter no máximo 255 caracteres.',
+            'endereco.string'   => 'O endereço deve ser um texto válido.',
+            'endereco.max'      => 'O endereço deve ter no máximo 255 caracteres.',
             
             'numero.required' => 'O número é obrigatório.',
-            'numero.string' => 'O número deve ser um texto válido.',
-            'numero.max' => 'O número deve ter no máximo 20 caracteres.',
+            'numero.string'   => 'O número deve ser um texto válido.',
+            'numero.max'      => 'O número deve ter no máximo 20 caracteres.',
             
             'bairro.required' => 'O bairro é obrigatório.',
-            'bairro.string' => 'O bairro deve ser um texto válido.',
-            'bairro.max' => 'O bairro deve ter no máximo 255 caracteres.',
+            'bairro.string'   => 'O bairro deve ser um texto válido.',
+            'bairro.max'      => 'O bairro deve ter no máximo 255 caracteres.',
             
             'complemento.string' => 'O complemento deve ser um texto válido.',
-            'complemento.max' => 'O complemento deve ter no máximo 255 caracteres.',
+            'complemento.max'    => 'O complemento deve ter no máximo 255 caracteres.',
             
             'cidade.required' => 'A cidade é obrigatória.',
-            'cidade.string' => 'A cidade deve ser um texto válido.',
-            'cidade.max' => 'A cidade deve ter no máximo 255 caracteres.',
+            'cidade.string'   => 'A cidade deve ser um texto válido.',
+            'cidade.max'      => 'A cidade deve ter no máximo 255 caracteres.',
             
-            'uf.required' => 'O estado (UF) é obrigatório.',
-            'uf.string' => 'O estado deve ser um texto válido.',
-            'uf.size' => 'O estado deve ter exatamente 2 caracteres.',
+            'uf.required'  => 'O estado (UF) é obrigatório.',
+            'uf.string'    => 'O estado deve ser um texto válido.',
+            'uf.size'      => 'O estado deve ter exatamente 2 caracteres.',
             'uf.uppercase' => 'O estado deve estar em letras maiúsculas.',
             
-            // Profissão
+              // Profissão
             'id_profissao.required' => 'A profissão é obrigatória.',
-            'id_profissao.integer' => 'A profissão deve ser um número válido.',
-            'id_profissao.exists' => 'A profissão selecionada não existe.',
+            'id_profissao.integer'  => 'A profissão deve ser um número válido.',
+            'id_profissao.exists'   => 'A profissão selecionada não existe.',
             
-            // Status
+              // Status
             'status.required' => 'O status é obrigatório.',
-            'status.in' => 'O status deve ser ativo ou inativo.',
+            'status.in'       => 'O status deve ser ativo ou inativo.',
         ];
     }
 
@@ -189,36 +178,32 @@ class ClienteRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'nome' => 'nome',
+            'nome'            => 'nome',
             'data_nascimento' => 'data de nascimento',
-            'tipo_pessoa' => 'tipo de pessoa',
-            'documento' => 'documento',
-            'email' => 'email',
-            'telefone' => 'telefone',
-            'endereco' => 'endereço',
-            'numero' => 'número',
-            'bairro' => 'bairro',
-            'complemento' => 'complemento',
-            'cidade' => 'cidade',
-            'uf' => 'estado',
-            'id_profissao' => 'profissão',
-            'status' => 'status',
+            'tipo_pessoa'     => 'tipo de pessoa',
+            'documento'       => 'documento',
+            'email'           => 'email',
+            'telefone'        => 'telefone',
+            'endereco'        => 'endereço',
+            'numero'          => 'número',
+            'bairro'          => 'bairro',
+            'complemento'     => 'complemento',
+            'cidade'          => 'cidade',
+            'uf'              => 'estado',
+            'id_profissao'    => 'profissão',
+            'status'          => 'status',
         ];
     }
 
-    /**
-     * Prepare the data for validation.
-     */
+
     protected function prepareForValidation(): void
     {
-        // Normalizar UF para maiúsculo
         if ($this->has('uf')) {
             $this->merge([
                 'uf' => strtoupper($this->uf)
             ]);
         }
 
-        // Limpar documento de formatação para validação
         if ($this->has('documento')) {
             $this->merge([
                 'documento_limpo' => preg_replace('/[^0-9]/', '', $this->documento)
@@ -226,15 +211,10 @@ class ClienteRequest extends FormRequest
         }
     }
 
-    /**
-     * Configure the validator instance.
-     */
+
     public function withValidator($validator): void
     {
         $validator->after(function ($validator) {
-            // Validações adicionais complexas podem ir aqui
-            
-            // Exemplo: validar se o telefone tem DDD válido
             if ($this->has('telefone')) {
                 $telefone = preg_replace('/[^0-9]/', '', $this->telefone);
                 $ddd = substr($telefone, 0, 2);

@@ -32,3 +32,4 @@
 # --- Geral ---
 .DS_Store
 Thumbs.db
+/mysql-data/

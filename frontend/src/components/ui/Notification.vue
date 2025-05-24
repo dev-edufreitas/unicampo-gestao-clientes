@@ -3,7 +3,7 @@
     <div v-if="visible" :class="['alert', typeClass, 'alert-notification']" class="d-flex align-items-center"
       :style="style">
       <i :class="iconClass + ' me-2'"></i>
-      <span>{{ message }}</span>
+      <span>{{ currentMessage }}</span>
     </div>
   </transition>
 </template>
@@ -13,12 +13,14 @@ export default {
   name: 'Notification',
   props: {
     message : String,
-    type    : { type: String, default: 'success' },
-    duration: { type: Number, default: 3000 }
+    type    : {type: String, default: 'success'},
+    duration: {type: Number, default: 3000}
   },
   data() {
     return {
-      visible: false
+      visible: false,
+      currentMessage: '',
+      timeout: null
     };
   },
   computed: {
@@ -41,11 +43,41 @@ export default {
     }
   },
   watch: {
-    message(newVal) {
-      if (newVal) {
-        this.visible = true;
-        setTimeout(() => (this.visible = false), this.duration);
+    message: {
+      handler(newVal) {
+        if (newVal && newVal.trim()) {
+          this.showNotification(newVal);
+        }
+      },
+      immediate: true
+    }
+  },
+  methods: {
+    showNotification(message) {
+    
+      if (this.timeout) {
+        clearTimeout(this.timeout);
       }
+      
+      this.currentMessage = message;
+      this.visible        = true;
+
+      this.timeout = setTimeout(() => {
+        this.visible = false;
+        this.currentMessage = '';
+      }, this.duration);
+    },
+
+    hide() {
+      this.visible = false;
+      if (this.timeout) {
+        clearTimeout(this.timeout);
+      }
+    }
+  },
+  beforeUnmount() {
+    if (this.timeout) {
+      clearTimeout(this.timeout);
     }
   }
 };
@@ -54,11 +86,25 @@ export default {
 <style scoped>
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.3s;
+  transition: all 0.3s ease;
 }
 
-.fade-enter-from,
+.fade-enter-from {
+  opacity: 0;
+  transform: translateX(100px);
+}
+
 .fade-leave-to {
   opacity: 0;
+  transform: translateX(100px);
+}
+
+.alert-notification {
+  cursor: pointer;
+}
+
+.alert-notification:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
 }
 </style>

@@ -1,20 +1,17 @@
 <template>
   <div id="app" class="d-flex flex-column min-vh-100">
     <AppHeader />
-
-    <!-- Notificação global -->
     <Notification
       :message="notification.message"
       :type="notification.type"
       :duration="notification.duration"
+      :key="notificationKey"
     />
-
     <main class="flex-grow-1 py-5">
       <div class="app-wrapper container pt-5 mt-4 flex-grow-1">
         <router-view />
       </div>
     </main>
-
     <AppFooter />
   </div>
 </template>
@@ -38,13 +35,18 @@ export default {
         message: '',
         type: 'success',
         duration: 3000
-      }
+      },
+      notificationKey: 0
     };
   },
   created() {
     eventBus.on('notify', ({ message, type = 'success', duration = 3000 }) => {
       this.notification = { message, type, duration };
+      this.notificationKey++;
     });
+  },
+  beforeUnmount() {
+    eventBus.off('notify');
   }
 };
 </script>

@@ -48,20 +48,18 @@ export function useValidacaoCliente(form, errors, documentoLabel) {
   });
 
   // Email: obrigatório e formato válido
-  watch(() => form.value.email, (val) => {
+   watch(() => form.value.email, (val) => {
     errors.value.email = '';
-    if (!val) errors.value.email = 'O email é obrigatório';
-    else if (!validaEmail(val)) errors.value.email = 'Email inválido';
-  });
 
-  // Telefone: obrigatório e com DDD + 8 ou 9 dígitos
-  watch(() => form.value.telefone, (val) => {
-    errors.value.telefone = '';
-    const tel = val.replace(/[^\d]/g, '');
-    if (!tel) {
-      errors.value.telefone = 'O telefone é obrigatório';
-    } else if (tel.length < 10 || tel.length > 11) {
-      errors.value.telefone = 'O telefone deve conter DDD + 8 ou 9 dígitos';
+    if (!val || !val.trim()) {
+      errors.value.email = 'O email é obrigatório';
+      return;
+    }
+
+    const emailLimpo = val.trim();
+    
+    if (!validaEmail(emailLimpo)) {
+      errors.value.email = 'Email inválido';
     }
   });
 }

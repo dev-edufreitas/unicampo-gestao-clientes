@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-
 /**
  * @OA\Schema(
  *     schema="Cliente",
@@ -74,7 +73,6 @@ class Cliente extends Model
     {
         return $date->format('Y-m-d');
     }
-
 
     public function endereco()
     {

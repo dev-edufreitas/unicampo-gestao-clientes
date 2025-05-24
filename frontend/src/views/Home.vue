@@ -14,7 +14,7 @@
               <PrincipalButton to="/clientes" class="px-4 py-3" icon="fas fa-user">
                 Ver Clientes
               </PrincipalButton>
-              <SecondaryButton to="/clientes/novo" class="px-4 py-3" icon="fas fa-user-plus">
+              <SecondaryButton @click="irParaNovoCliente" class="px-4 py-3" icon="fas fa-user-plus">
                 Novo Cliente
               </SecondaryButton>
             </div>
@@ -25,7 +25,6 @@
         </div>
       </div>
     </div>
-
     <section class="funcionalidades-section">
       <div class="container-fluid px-0">
         <div class="text-center mb-5">
@@ -33,31 +32,55 @@
           <p class="text-muted mt-3">Explore todas as ferramentas disponíveis</p>
         </div>
         <div class="row g-4 px-3">
-          <div class="col-lg-4 col-md-6" v-for="(card, index) in cards" :key="index">
+          <div class="col-lg-4 col-md-6">
             <div class="card h-100 border-0 funcionalidade-card shadow-sm">
               <div class="card-body text-center p-4 d-flex flex-column">
                 <div class="icone-wrapper mb-4 mx-auto">
-                  <i :class="`fas ${card.icon} fa-2x text-unicampo`"></i>
+                  <i class="fas fa-user-plus fa-2x text-unicampo"></i>
                 </div>
-                <h3 class="h4 mb-3 text-unicampo fw-semibold">{{ card.title }}</h3>
-                <p class="text-muted mb-4 flex-grow-1">{{ card.description }}</p>
+                <h3 class="h4 mb-3 text-unicampo fw-semibold">Cadastrar Clientes</h3>
+                <p class="text-muted mb-4 flex-grow-1">
+                  Adicione novos clientes ao sistema com facilidade e mantenha seus dados sempre atualizados para um controle eficiente.
+                </p>
                 <div class="mt-auto">
-                  <router-link 
-                    v-if="card.isInternal" 
-                    :to="card.link" 
-                    class="btn btn-funcao w-100"
-                  >
-                    {{ card.cta }}
+                  <button @click="irParaNovoCliente" class="btn btn-funcao w-100">
+                    Cadastrar Agora
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <div class="card h-100 border-0 funcionalidade-card shadow-sm">
+              <div class="card-body text-center p-4 d-flex flex-column">
+                <div class="icone-wrapper mb-4 mx-auto">
+                  <i class="fas fa-search fa-2x text-unicampo"></i>
+                </div>
+                <h3 class="h4 mb-3 text-unicampo fw-semibold">Consultar Clientes</h3>
+                <p class="text-muted mb-4 flex-grow-1">
+                  Visualize e pesquise os clientes cadastrados no sistema de forma rápida e eficiente com filtros avançados.
+                </p>
+                <div class="mt-auto">
+                  <router-link to="/clientes" class="btn btn-funcao w-100">
+                    Consultar Lista
                   </router-link>
-                  <a 
-                    v-else 
-                    :href="card.link" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    class="btn btn-funcao w-100"
-                  >
-                    {{ card.cta }}
-                    <i class="fas fa-external-link-alt ms-2"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6">
+            <div class="card h-100 border-0 funcionalidade-card shadow-sm">
+              <div class="card-body text-center p-4 d-flex flex-column">
+                <div class="icone-wrapper mb-4 mx-auto">
+                  <i class="fas fa-file-alt fa-2x text-unicampo"></i>
+                </div>
+                <h3 class="h4 mb-3 text-unicampo fw-semibold">Documentação</h3>
+                <p class="text-muted mb-4 flex-grow-1">
+                  Acesse documentação completa e guias detalhados para utilizar todas as funcionalidades do sistema.
+                </p>
+                <div class="mt-auto">
+                  <a href="http://localhost:8000/api/documentation" target="_blank" rel="noopener noreferrer" class="btn btn-funcao w-100">
+                    Ver Documentação <i class="fas fa-external-link-alt ms-2"></i>
                   </a>
                 </div>
               </div>
@@ -66,7 +89,6 @@
         </div>
       </div>
     </section>
-
     <section class="estatisticas-section mt-5">
       <div class="card border-0 rounded-4 bg-light">
         <div class="card-body p-5">
@@ -107,7 +129,7 @@
 </template>
 
 <script>
-import { ref, computed, onMounted } from 'vue';
+import { computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import PrincipalButton from '@/components/ui/PrincipalButton.vue';
@@ -127,36 +149,15 @@ export default {
     const statsLoading = computed(() => store.getters['cliente/isLoading']);
     const statsError   = computed(() => store.getters['cliente/hasError']);
 
-    const cards = ref([
-      {
-        icon: 'fa-user-plus',
-        title: 'Cadastrar Clientes',
-        description:
-          'Adicione novos clientes ao sistema com facilidade e mantenha seus dados sempre atualizados para um controle eficiente.',
-        link: '/clientes/novo',
-        cta: 'Cadastrar Agora',
-        isInternal: true
-      },
-      {
-        icon: 'fa-search',
-        title: 'Consultar Clientes',
-        description:
-          'Visualize e pesquise os clientes cadastrados no sistema de forma rápida e eficiente com filtros avançados.',
-        link: '/clientes',
-        cta: 'Consultar Lista',
-        isInternal: true
-      },
-      {
-        icon: 'fa-file-alt',
-        title: 'Documentação',
-        description:
-          'Acesse documentação completa e guias detalhados para utilizar todas as funcionalidades do sistema.',
-        link: 'http://localhost:8000/api/documentation',
-        cta: 'Ver Documentação',
-        isInternal: false
-      },
-    ]);
-
+    const irParaNovoCliente = async () => {
+      try {
+        await store.dispatch('cliente/resetForm')
+        await router.push({ path: '/clientes/novo' })
+      } catch (error) {
+        console.error('Erro ao ir para novo cliente:', error)
+      }
+    }
+    
     const formatNumber = (number) => {
       if (number === 0) return '0';
       return number.toLocaleString('pt-BR');
@@ -171,10 +172,10 @@ export default {
     });
 
     return {
-      cards,
       stats,
       statsLoading,
       statsError,
+      irParaNovoCliente,
       formatNumber
     };
   }

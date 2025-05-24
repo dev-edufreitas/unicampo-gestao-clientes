@@ -91,6 +91,16 @@ export function validaCNPJ(cnpj) {
  * @returns {boolean} - True se o e-mail for válido, false caso contrário
  */
 export function validaEmail(email) {
-  const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  if (!email || typeof email !== 'string') {
+    return false;
+  }
+  email = email.trim();
+
+  if ((email.match(/@/g) || []).length !== 1) {
+    return false;
+  }
+
+  const regex = /^[a-zA-Z0-9]([a-zA-Z0-9._-]*[a-zA-Z0-9])?@[a-zA-Z0-9]([a-zA-Z0-9.-]*[a-zA-Z0-9])?\.[a-zA-Z]{2,}$/;
+  
   return regex.test(email);
 }

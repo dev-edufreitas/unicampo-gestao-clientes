@@ -43,15 +43,13 @@
           </div>
           <p class="text-muted mt-3">Carregando dados...</p>
         </div>
-
         <div v-else-if="error" class="alert alert-danger d-flex align-items-center" role="alert">
           <i class="fas fa-exclamation-triangle me-3"></i>
           <div><strong>Erro:</strong> {{ error }}</div>
         </div>
-
         <div v-else>
-          <DadosPessoaisForm v-if="currentStepLocal === 1" />
-          <EnderecoForm v-else-if="currentStepLocal === 2" />
+          <DadosPessoaisForm v-if="currentStepLocal  === 1" />
+          <EnderecoForm v-else-if="currentStepLocal  === 2" />
           <ProfissaoForm v-else-if="currentStepLocal === 3" />
         </div>
       </div>
@@ -103,8 +101,13 @@ export default {
     };
 
     const voltarParaLista = async () => {
-      await store.dispatch('cliente/resetSteps');
-      router.push('/clientes');
+      try {
+        await store.dispatch('cliente/resetSteps');
+        await store.dispatch('cliente/resetForm');
+        router.push('/clientes');
+      } catch (error) {
+        console.error('Erro ao resetar dados:', error);
+      }
     };
 
     watch(
@@ -114,12 +117,6 @@ export default {
       },
       { immediate: true }
     );
-
-    onMounted(() => {
-      if (!isEdicao.value) {
-        store.dispatch('cliente/resetForm');
-      }
-    });
 
     useClienteFormPersistence();
 

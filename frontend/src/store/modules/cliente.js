@@ -235,12 +235,14 @@ export default {
         commit('SET_CURRENT_STEP', state.currentStep - 1);
       }
     },
-
     resetForm({ commit }) {
-      commit('RESET_FORM_DATA');
-      localStorage.removeItem('clienteFormData');
-      localStorage.removeItem('clienteCurrentStep');
-    },
+      return new Promise(resolve => {
+          commit('RESET_FORM_DATA');
+          localStorage.removeItem('clienteFormData');
+          localStorage.removeItem('clienteCurrentStep');
+          resolve();
+        });
+      },
 
     resetSteps({ commit }) {
       commit('SET_CURRENT_STEP', 1);              

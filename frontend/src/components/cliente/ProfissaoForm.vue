@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter, useRoute } from 'vue-router';
 import SelectField from '@/components/ui/SelectField.vue';
@@ -142,7 +142,7 @@ export default {
       return '';
     });
 
-    const isEdicao = computed(() => !!route.params.id);
+    const isEdicao    = computed(() => !!route.params.id);
     const isFormValid = computed(() => form.value.id_profissao && !Object.values(errors.value).some(e => e !== ''));
 
     const handleSalvar = () => {

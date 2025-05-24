@@ -1,7 +1,5 @@
 <?php
 
-
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\ProfissaoController;
 use App\Http\Controllers\API\EnderecoController;

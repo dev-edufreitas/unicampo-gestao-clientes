@@ -5,14 +5,14 @@ export default {
   
   state: {
     profissoes: [],
-    loading   : false,
-    error     : null
+    loading:   false,
+    error:     null
   },
   
   getters: {
-    isLoading    : state => state.loading,
-    hasError     : state => state.error !== null,
-    getError     : state => state.error,
+    isLoading:     state => state.loading,
+    hasError:      state => state.error !== null,
+    getError:      state => state.error,
     getProfissoes: state => state.profissoes
   },
   
@@ -31,17 +31,23 @@ export default {
   },
   
   actions: {
-    async fetchProfissoes({ commit }) {
+    async fetchProfissoes({ state, commit }) {
+      if (state.profissoes.length) {
+        return state.profissoes;
+      }
+
+      commit('SET_LOADING', true);
+      commit('SET_ERROR', null);
+
       try {
-        commit('SET_LOADING', true);
-        commit('SET_ERROR', null);
-        
         const response = await profissaoService.getProfissoes();
         commit('SET_PROFISSOES', response.data);
-        
         return response.data;
       } catch (error) {
-        commit('SET_ERROR', error.response?.data?.message || 'Erro ao buscar profissões');
+        commit(
+          'SET_ERROR',
+          error.response?.data?.message || 'Erro ao buscar profissões'
+        );
         throw error;
       } finally {
         commit('SET_LOADING', false);

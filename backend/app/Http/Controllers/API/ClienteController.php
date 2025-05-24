@@ -7,6 +7,8 @@ use App\Http\Requests\ClienteRequest;
 use App\Services\ClienteService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use DomainException;
+use Exception;
 
 class ClienteController extends Controller
 {
@@ -38,8 +40,10 @@ class ClienteController extends Controller
         try {
             $stats = $this->clienteService->obterEstatisticas();
             return response()->json($stats);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Erro ao obter estatísticas'], 500);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao obter estatísticas'
+            ], 500);
         }
     }
 
@@ -80,10 +84,17 @@ class ClienteController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $filtros = $request->only(['status', 'nome', 'order_desc']);
-        $clientes = $this->clienteService->buscarClientes($filtros);
+        try {
+            $filtros               = $request->only(['status', 'nome', 'order_desc']);
+            $filtros['order_desc'] = $request->boolean('order_desc');
+            $clientes              = $this->clienteService->buscarClientes($filtros);
 
-        return response()->json($clientes);
+            return response()->json($clientes);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao listar clientes'
+            ], 500);
+        }
     }
 
     /**
@@ -112,8 +123,6 @@ class ClienteController extends Controller
     {
         try {
             $cliente = $this->clienteService->criarCliente($request->validated());
-
-            // Limpar cache das estatísticas
             $this->clienteService->limparCacheStats();
 
             return response()->json([
@@ -121,12 +130,12 @@ class ClienteController extends Controller
                 'cliente' => $cliente,
             ], 201);
 
-        } catch (\Exception $e) {
-            \Log::error('Erro ao criar cliente', [
-                'error' => $e->getMessage(),
-                'data' => $request->validated()
-            ]);
+        } catch (DomainException $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 422);
 
+        } catch (Exception $e) {
             return response()->json([
                 'message' => 'Erro interno do servidor'
             ], 500);
@@ -160,17 +169,23 @@ class ClienteController extends Controller
      */
     public function show(int $id): JsonResponse
     {
-        $cliente = $this->clienteService->buscarClientePorId($id);
+        try {
+            $cliente = $this->clienteService->buscarClientePorId($id);
 
-        if (!$cliente) {
+            if (!$cliente) {
+                return response()->json([
+                    'message' => 'Cliente não encontrado'
+                ], 404);
+            }
+
+            return response()->json($cliente);
+
+        } catch (Exception $e) {
             return response()->json([
-                'message' => 'Cliente não encontrado'
-            ], 404);
+                'message' => 'Erro ao consultar cliente'
+            ], 500);
         }
-
-        return response()->json($cliente);
     }
-
     /**
      * @OA\Put(
      *      path="/clientes/{id}",
@@ -206,21 +221,20 @@ class ClienteController extends Controller
      */
     public function update(ClienteRequest $request, int $id): JsonResponse
     {
-        $cliente = $this->clienteService->buscarClientePorId($id);
-
-        if (!$cliente) {
-            return response()->json([
-                'message' => 'Cliente não encontrado'
-            ], 404);
-        }
-
         try {
+            $cliente = $this->clienteService->buscarClientePorId($id);
+
+            if (!$cliente) {
+                return response()->json([
+                    'message' => 'Cliente não encontrado'
+                ], 404);
+            }
+
             $clienteAtualizado = $this->clienteService->atualizarCliente(
-                $cliente, 
+                $cliente,
                 $request->validated()
             );
 
-            // Limpar cache se mudou o status
             if ($request->has('status')) {
                 $this->clienteService->limparCacheStats();
             }
@@ -230,13 +244,11 @@ class ClienteController extends Controller
                 'cliente' => $clienteAtualizado,
             ]);
 
-        } catch (\Exception $e) {
-            \Log::error('Erro ao atualizar cliente', [
-                'cliente_id' => $id,
-                'error' => $e->getMessage(),
-                'data' => $request->validated()
-            ]);
-
+        } catch (DomainException $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 422);
+        } catch (Exception $e) {
             return response()->json([
                 'message' => 'Erro interno do servidor'
             ], 500);
@@ -273,18 +285,16 @@ class ClienteController extends Controller
      */
     public function destroy(int $id): JsonResponse
     {
-        $cliente = $this->clienteService->buscarClientePorId($id);
-
-        if (!$cliente) {
-            return response()->json([
-                'message' => 'Cliente não encontrado'
-            ], 404);
-        }
-
         try {
-            $this->clienteService->inativarCliente($cliente);
+            $cliente = $this->clienteService->buscarClientePorId($id);
 
-            // Limpar cache das estatísticas
+            if (!$cliente) {
+                return response()->json([
+                    'message' => 'Cliente não encontrado'
+                ], 404);
+            }
+
+            $this->clienteService->inativarCliente($cliente);
             $this->clienteService->limparCacheStats();
 
             return response()->json([
@@ -292,11 +302,6 @@ class ClienteController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            \Log::error('Erro ao inativar cliente', [
-                'cliente_id' => $id,
-                'error' => $e->getMessage()
-            ]);
-
             return response()->json([
                 'message' => 'Erro interno do servidor'
             ], 500);

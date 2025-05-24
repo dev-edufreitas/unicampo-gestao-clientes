@@ -3,7 +3,7 @@
     <div class="nav-container">
       <div class="logo-container">
         <router-link to="/">
-          <img src="@/assets/logo.png" alt="Logotipo da Unicampo" height="32" />
+          <img src="@/assets/logo.png" alt="Logotipo da Unicampo" height="32"/>
           <span class="logo-text">Unicampo</span>
         </router-link>
       </div>

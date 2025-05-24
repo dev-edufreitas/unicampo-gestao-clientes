@@ -19,7 +19,7 @@ class ProfissaoSeeder extends Seeder
         ];
 
         foreach ($profissoes as $nome) {
-            Profissao::create(['nome_profissao' => $nome]);
+            Profissao::firstOrCreate (['nome_profissao' => $nome]);
         }
     }
 }

@@ -92,7 +92,6 @@ export default {
       { value: 'juridica', label: 'Pessoa Jurídica' }
     ];
 
-
     watch(
       () => store.getters['cliente/getFormData'],
       (novoValor) => {
