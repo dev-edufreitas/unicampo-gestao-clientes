@@ -131,6 +131,7 @@ unicampo-gestao-clientes/
 │   │   │   └── ClienteService.php        
 │   │   │
 │   │   └── Utils/
+|   |       └── DocumentoFormatter.php
 │   │       └── DocumentoValidator.php    
 │   │
 │   ├── 📂 database/
