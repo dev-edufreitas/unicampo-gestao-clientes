@@ -39,7 +39,7 @@ Este projeto é um teste prático para a Unicampo, que implementa um sistema com
 
 ```bash
 git clone https://github.com/dev-edufreitas/unicampo-gestao-clientes.git
-cd unicampo-client-manager
+cd unicampo-gestao-clientes
 docker-compose up -d --build
 ```
 
@@ -109,7 +109,7 @@ docker-compose exec backend php artisan test --testsuite=Feature
 ## 📁 Estrutura do Projeto
 
 ```
-unicampo-client-manager/
+unicampo-gestao-clientes/
 │
 ├── 🐳 docker-compose.yml          
 ├── 📄 README.md
