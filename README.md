@@ -63,6 +63,7 @@ Aguarde a inicialização completa dos serviços. O processo pode levar alguns m
 - Dashboard com estatísticas dos clientes
 - API RESTful completa e documentada
 - Testes automatizados (unitários e de integração)
+- Utilização de cache do laravel para aprimoramento e desempenho
 
 ---
 
