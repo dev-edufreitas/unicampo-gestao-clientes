@@ -40,7 +40,7 @@ Este projeto é um teste prático para a Unicampo, que implementa um sistema com
 ```bash
 git clone https://github.com/dev-edufreitas/unicampo-gestao-clientes.git
 cd unicampo-gestao-clientes
-docker-compose up -d --build
+docker compose up -d --build
 ```
 
 Aguarde a inicialização completa dos serviços. O processo pode levar alguns minutos na primeira execução.
@@ -72,16 +72,16 @@ Execute os testes com os comandos abaixo:
 
 ```bash
 # Todos os testes
-docker-compose exec backend php artisan test
+docker compose exec backend php artisan test
 
 # Usando script do Composer
-docker-compose exec backend composer test
+docker compose exec backend composer test
 
 # Testes unitários
-docker-compose exec backend php artisan test --testsuite=Unit
+docker compose exec backend php artisan test --testsuite=Unit
 
 # Testes de feature
-docker-compose exec backend php artisan test --testsuite=Feature
+docker compose exec backend php artisan test --testsuite=Feature
 ```
 
 ---
